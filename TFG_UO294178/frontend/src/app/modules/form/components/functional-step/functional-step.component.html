@@ -1,0 +1,113 @@
+<div [formGroup]="form" class="step-content">
+
+  <!-- ASA -->
+  <div class="section-block">
+    <div class="header-compact">
+      <h3 class="section-title" style="margin-bottom: 0; border: none; padding: 0;">A) Clasificación ASA</h3>
+
+      <button mat-stroked-button class="btn-small-outline" type="button" (click)="openAsaTable.emit()">
+        <mat-icon>visibility</mat-icon> Ver Tabla
+      </button>
+    </div>
+
+    <div class="asa-container">
+      <mat-radio-group formControlName="asa" class="radio-row-centered">
+        <mat-radio-button value="I">I</mat-radio-button>
+        <mat-radio-button value="II">II</mat-radio-button>
+        <mat-radio-button value="III">III</mat-radio-button>
+        <mat-radio-button value="IV">IV</mat-radio-button>
+        <mat-radio-button value="V">V</mat-radio-button>
+        <mat-radio-button value="VI">VI</mat-radio-button>
+      </mat-radio-group>
+    </div>
+  </div>
+
+  <!-- METS -->
+  <div class="section-block">
+    <h3 class="section-title">Capacidad Funcional (METS)</h3>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>METS</mat-label>
+      <input matInput formControlName="mets">
+    </mat-form-field>
+  </div>
+
+  <!-- RIESGO QUIRÚRGICO -->
+  <div class="section-block">
+    <div class="header-compact">
+      <h3 class="section-title">Riesgo Quirúrgico</h3>
+
+      <button mat-stroked-button class="btn-small-outline" type="button" (click)="openRiskTable.emit()">
+        <mat-icon>visibility</mat-icon> Ver Tabla
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width mt-2">
+      <mat-label>Selecciona Nivel de Riesgo</mat-label>
+      <mat-select formControlName="surgicalRisk">
+        <mat-option value="Bajo">Bajo</mat-option>
+        <mat-option value="Intermedio">Intermedio</mat-option>
+        <mat-option value="Alto">Alto</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- FRAIL -->
+  <mat-expansion-panel class="calc-panel section-block">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <div class="panel-title">
+          <div class="title">Escala FRAIL</div>
+          <div class="subtitle">Selecciona los ítems que apliquen</div>
+        </div>
+      </mat-panel-title>
+      <mat-panel-description>
+        <span class="score-preview" [class.warn]="frailScore >= 3">
+          {{ frailInterpretation }}
+        </span>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="checkbox-list">
+      <mat-checkbox formControlName="f_fatigue">Fatiga frecuente</mat-checkbox>
+      <mat-checkbox formControlName="f_resistance">Dificultad subir 10 escalones</mat-checkbox>
+      <mat-checkbox formControlName="f_aerobic">Dificultad caminar 100m</mat-checkbox>
+      <mat-checkbox formControlName="f_illness">5 o más enfermedades</mat-checkbox>
+      <mat-checkbox formControlName="f_weight_loss">Pérdida peso &gt;5%</mat-checkbox>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- BARTHEL -->
+  <mat-expansion-panel class="calc-panel section-block">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Escala BARTHEL
+      </mat-panel-title>
+      <mat-panel-description>
+        <span class="score-preview" [class.alert]="barthelScore < 60">
+          {{ barthelInterpretation }}
+        </span>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div class="barthel-content">
+      <mat-checkbox formControlName="b_wheelchair" class="mb-2">Usa silla de ruedas</mat-checkbox>
+
+      @for (q of barthelQuestions; track q.control) {
+      <div class="barthel-item">
+        <label class="question-label">{{ q.label }}</label>
+        <mat-radio-group [formControlName]="q.control" class="radio-options">
+          @for (opt of q.opts; track opt.v) {
+          <mat-radio-button [value]="opt.v">{{ opt.t }}</mat-radio-button>
+          }
+        </mat-radio-group>
+      </div>
+      }
+    </div>
+  </mat-expansion-panel>
+
+  <div class="step-actions">
+    <button mat-button type="button" matStepperPrevious>Atrás</button>
+    <button mat-button type="button" matStepperNext>Siguiente</button>
+  </div>
+
+</div>

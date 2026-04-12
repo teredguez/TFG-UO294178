@@ -1,0 +1,48 @@
+<app-header></app-header>
+<div class="admin-container">
+  <div class="admin-card">
+    <div class="card-header">
+      <h2>Panel de Administración</h2>
+      <p class="subtitle">Dar de alta nuevos usuarios en el sistema.</p>
+    </div>
+
+    <!-- Feedback Message -->
+    @if (message) {
+      <div class="alert" [ngClass]="message.type">
+        {{ message.text }}
+      </div>
+    }
+
+    <form [formGroup]="inviteForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Correo del Clínico</label>
+        <input 
+          id="email" 
+          type="email" 
+          formControlName="email" 
+          placeholder="ejemplo@sergas.es"
+          autocomplete="off"
+        >
+        
+        <!-- Errores -->
+        @if (inviteForm.get('email')?.touched && inviteForm.get('email')?.invalid) {
+          <div class="error-container">
+            @if (inviteForm.get('email')?.hasError('required')) {
+              <small>El email es obligatorio.</small>
+            }
+            @if (inviteForm.get('email')?.hasError('email')) {
+              <small>Formato de email inválido.</small>
+            }
+            @if (inviteForm.get('email')?.hasError('invalidDomain')) {
+              <small>Debe ser un dominio @sergas.es</small>
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" [disabled]="inviteForm.invalid || isLoading" class="btn-admin">
+        {{ isLoading ? 'Procesando...' : 'Autorizar Usuario' }}
+      </button>
+    </form>
+  </div>
+</div>

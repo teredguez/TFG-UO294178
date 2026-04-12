@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<div class="dashboard-container">
+
+  <div class="welcome-banner">
+    <h1>Escritorio Clínico</h1>
+    <p>Selecciona una acción para comenzar.</p>
+  </div>
+
+  <div class="cards-grid">
+    <!-- Para cada opción del menú-->
+    @for (item of menuItems; track item.title) {
+      <mat-card class="menu-card" [routerLink]="item.route">
+        <div class="card-content-wrapper">
+
+          <div class="icon-circle" [ngClass]="item.color">
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </div>
+
+          <div class="text-content">
+            <mat-card-title>{{ item.title }}</mat-card-title>
+            <mat-card-subtitle>{{ item.subtitle }}</mat-card-subtitle>
+            <p class="description">{{ item.description }}</p>
+          </div>
+
+        </div>
+      </mat-card>
+    }
+  </div>
+</div>

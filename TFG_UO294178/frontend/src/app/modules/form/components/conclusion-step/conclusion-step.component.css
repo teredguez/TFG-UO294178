@@ -1,0 +1,41 @@
+.section-block {
+  margin-bottom: 2.5rem;
+  padding: 0 0.5rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.final-decision {
+  background-color: #e3f2fd;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #bbdefb;
+  margin-top: 3rem;
+}
+
+.vertical-radio {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.full-width {
+  width: 100%;
+}

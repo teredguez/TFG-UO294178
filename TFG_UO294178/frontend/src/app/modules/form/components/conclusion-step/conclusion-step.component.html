@@ -1,0 +1,35 @@
+<div [formGroup]="form">
+  <!-- conclusión -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Problema manejo perioperatorio</mat-label>
+    <textarea matInput formControlName="problem" rows="3"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Plan perioperatorio propuesto</mat-label>
+    <textarea matInput formControlName="plan" rows="3"></textarea>
+  </mat-form-field>
+
+  <div class="section-block final-decision">
+    <h3>Decisión ante la Intervención</h3>
+    <mat-radio-group formControlName="decision" class="vertical-radio">
+      <mat-radio-button value="Ingreso">Aceptado con ingreso</mat-radio-button>
+      <mat-radio-button value="CMA">Aceptado como CMA </mat-radio-button>
+      <mat-radio-button value="Demorado">Demorado</mat-radio-button>
+    </mat-radio-group>
+
+    @if (isDelayed) {
+    <mat-form-field appearance="outline" class="full-width mt-2">
+      <mat-label>Motivo de la demora</mat-label>
+      <input matInput formControlName="delayReason">
+    </mat-form-field>
+    }
+  </div>
+
+  <div class="step-actions">
+    <button mat-button matStepperPrevious>Atrás</button>
+    <button mat-raised-button color="primary" type="button" (click)="submitForm.emit()">
+      FINALIZAR Y DESCARGAR INFORME
+    </button>
+  </div>
+</div>

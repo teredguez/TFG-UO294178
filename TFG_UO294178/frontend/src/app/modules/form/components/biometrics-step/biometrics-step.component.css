@@ -1,0 +1,85 @@
+.section-block {
+  margin-bottom: 2.5rem;
+  padding: 0 0.5rem;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.read-only-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 0 1rem;
+  height: 56px;
+}
+
+.read-only-field label {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.read-only-field span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #005eb8;
+}
+
+.airway-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.check-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 0.5rem;
+}
+
+.check-row span {
+  font-weight: 500;
+  color: #444;
+}
+
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3rem;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}

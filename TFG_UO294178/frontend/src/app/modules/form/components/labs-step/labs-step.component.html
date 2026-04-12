@@ -1,0 +1,146 @@
+<div [formGroup]="form">
+  <!-- analítica -->
+  <h3 class="scale-title">Analítica Sanguínea</h3>
+
+  <!-- Hematología -->
+  <div class="section-block">
+    <h4 class="subsection-title">Hemograma y Coagulación</h4>
+    <div class="grid-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Hemoglobina (g/dL)</mat-label>
+        <input matInput type="number" formControlName="hemoglobin" placeholder="Ej: 13.5">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Plaquetas (x10^9/L)</mat-label>
+        <input matInput type="number" formControlName="platelets" placeholder="Ej: 250">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Coagulación (INR)</mat-label>
+        <input matInput formControlName="coagulation" placeholder="Ej: 1.1">
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Gasometría (GSAB)</mat-label>
+      <input matInput formControlName="gsab" placeholder="Ej: pH 7.4, pO2 90...">
+    </mat-form-field>
+  </div>
+
+  <!--Bioquímica -->
+  <div class="section-block">
+    <h4 class="subsection-title">Bioquímica General</h4>
+    <div class="grid-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Glucemia</mat-label>
+        <input matInput type="number" formControlName="glucose">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Creatinina (Renal)</mat-label>
+        <input matInput type="number" formControlName="renal">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Función Hepática</mat-label>
+        <input matInput formControlName="hepatic" placeholder="GOT/GPT/GGT">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!--Iones-->
+  <div class="section-block">
+    <h4 class="subsection-title">Iones</h4>
+    <div class="grid-ions">
+      <mat-form-field appearance="outline"><mat-label>Sodio</mat-label><input matInput
+          formControlName="sodium"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Potasio</mat-label><input matInput
+          formControlName="potassium"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Calcio</mat-label><input matInput
+          formControlName="calcium"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Magnesio</mat-label><input matInput
+          formControlName="magnesium"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Fósforo</mat-label><input matInput
+          formControlName="phosphorus"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Otros Iones</mat-label><input matInput
+          formControlName="ions"></mat-form-field>
+    </div>
+  </div>
+
+  <!--Marcadores Cardíacos -->
+  <div class="section-block">
+    <h4 class="subsection-title">Marcadores Cardíacos</h4>
+    <div class="grid-3">
+      <mat-form-field appearance="outline">
+        <mat-label>Pro-BNP</mat-label>
+        <input matInput formControlName="probnp">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Troponinas</mat-label>
+        <input matInput formControlName="troponins">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Otros Marcadores</mat-label>
+        <input matInput formControlName="cardiac_markers">
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!--Nutricional y Anemia -->
+  <div class="section-block">
+    <h4 class="subsection-title">Perfil Nutricional y Anemia</h4>
+    <div class="grid-3">
+      <mat-form-field appearance="outline"><mat-label>Hierro</mat-label><input matInput
+          formControlName="iron"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Transferrina</mat-label><input matInput
+          formControlName="transferrin"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Ácido Fólico</mat-label><input matInput
+          formControlName="folic_acid"></mat-form-field>
+      <mat-form-field appearance="outline"><mat-label>Prealbúmina</mat-label><input matInput
+          formControlName="prealbumin"></mat-form-field>
+      <mat-form-field appearance="outline" class="span-2"><mat-label>Estudio Nutricional / Perfil
+          Anemia</mat-label><input matInput formControlName="nutritional_study"></mat-form-field>
+    </div>
+  </div>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!--PRUEBAS DE IMAGEN -->
+  <h3 class="scale-title">Otras Exploraciones (Imagen y Funcionales)</h3>
+
+  <div class="grid-2">
+    <mat-form-field appearance="outline">
+      <mat-label>Electrocardiograma (EKG)</mat-label>
+      <textarea matInput formControlName="ekg" rows="2" placeholder="Ritmo sinusal, bloqueos..."></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Radiografía de tórax</mat-label>
+      <textarea matInput formControlName="xray" rows="2" placeholder="Sin hallazgos agudos..."></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Ecocardiograma</mat-label>
+      <textarea matInput formControlName="echo" rows="2" placeholder="FEVI, valvulopatías..."></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>TAC</mat-label>
+      <textarea matInput formControlName="ct_scan" rows="2"
+        placeholder="Cerebral, Cervical, Torácico, Abdominal"></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Espirometría</mat-label>
+      <textarea matInput formControlName="spirometry" rows="2"
+        placeholder="Patrón obstructivo/restrictivo..."></textarea>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Cateterismo</mat-label>
+      <textarea matInput formControlName="cath" rows="2"></textarea>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" class="full-width mt-2">
+    <mat-label>Otros Hallazgos</mat-label>
+    <textarea matInput formControlName="others" rows="2" placeholder="Otras pruebas relevantes..."></textarea>
+  </mat-form-field>
+
+  <div class="step-actions">
+    <button mat-button type="button" matStepperPrevious>Atrás</button>
+    <button mat-button type="button" matStepperNext>Siguiente</button>
+  </div>
+
+</div>

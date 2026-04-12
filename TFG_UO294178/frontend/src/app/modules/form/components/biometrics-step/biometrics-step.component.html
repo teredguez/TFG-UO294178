@@ -1,0 +1,83 @@
+<div [formGroup]="biometricsForm">
+  <!-- Constantes -->
+  <h4>Constantes Vitales</h4>
+  <div class="grid-3">
+    <mat-form-field appearance="outline">
+      <mat-label>Peso (kg)</mat-label>
+      <input matInput type="number" formControlName="weight">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Talla (cm)</mat-label>
+      <input matInput type="number" formControlName="height">
+    </mat-form-field>
+    <div class="read-only-field">
+      <label>IMC</label>
+      <span>{{ imcValue || '--' }}</span>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>TA (mmHg)</mat-label>
+      <input matInput formControlName="bp">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>FC (lpm)</mat-label>
+      <input matInput type="number" formControlName="hr">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Ritmo</mat-label>
+      <input matInput formControlName="rhythm">
+    </mat-form-field>
+  </div>
+</div>
+
+<div [formGroup]="airwayForm">
+  <!-- vía aérea -->
+  <h4>Exploración Vía Aérea</h4>
+  <div class="airway-grid">
+
+    <div class="check-row">
+      <span>Dentadura de retirar:</span>
+      <mat-radio-group formControlName="dentures">
+        <mat-radio-button [value]="true">SÍ</mat-radio-button>
+        <mat-radio-button [value]="false">NO</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="check-row">
+      <span>Mallampati:</span>
+      <mat-radio-group formControlName="mallampati">
+        <mat-radio-button value="I">I</mat-radio-button>
+        <mat-radio-button value="II">II</mat-radio-button>
+        <mat-radio-button value="III">III</mat-radio-button>
+        <mat-radio-button value="IV">IV</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="check-row">
+      <span>Dist. Tiromentoniana:</span>
+      <mat-radio-group formControlName="thyromental">
+        <mat-radio-button value=">6.5">>6.5 cm</mat-radio-button>
+        <mat-radio-button value="<6">
+          <6 cm</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <div class="check-row">
+      <span>Dist. Interincisivos:</span>
+      <mat-radio-group formControlName="interincisor">
+        <mat-radio-button value=">3">>3 traveses</mat-radio-button>
+        <mat-radio-button value="<3">
+          <3 traveses</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width mt-2">
+      <mat-label>Intubaciones previas</mat-label>
+      <input matInput formControlName="previousIntubations">
+    </mat-form-field>
+  </div>
+
+  <div class="step-actions">
+    <button mat-button type="button" matStepperPrevious>Atrás</button>
+    <button mat-button type="button" matStepperNext>Siguiente</button>
+  </div>
+</div>

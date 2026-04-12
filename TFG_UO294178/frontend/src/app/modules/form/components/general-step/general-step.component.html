@@ -1,0 +1,67 @@
+<div [formGroup]="form" class="step-content">
+
+  <div class="form-field">
+    <label class="field-label required">Diagnóstico</label>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <textarea matInput formControlName="diagnosis" rows="5" placeholder="Descripción del diagnóstico principal...">
+      </textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="form-field">
+    <label class="field-label required">Cirugía Prevista</label>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <textarea matInput formControlName="surgery" rows="1" placeholder="Procedimiento quirúrgico previsto...">
+      </textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="grid-2">
+    <div class="form-field">
+      <label class="field-label">Fecha Inclusión LE</label>
+
+      <mat-form-field appearance="outline">
+        <input matInput [matDatepicker]="picker" formControlName="listDate" placeholder="Seleccionar fecha">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <label class="field-label">Prioridad</label>
+
+      <mat-form-field appearance="outline">
+        <mat-select formControlName="priority" placeholder="Seleccionar prioridad">
+          <mat-option value="Preferente">P1 (Menos de 30 días)</mat-option>
+          <mat-option value="Normal">P2 (Menos de 90 días)</mat-option>
+          <mat-option value="Demorable">P3 (Permite demora)</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="form-field">
+    <label class="field-label">Antecedentes Personales</label>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <textarea matInput formControlName="history" rows="5" placeholder="Cardiopatías, alergias, patologías previas...">
+      </textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="form-field">
+    <label class="field-label">Tratamientos Domiciliarios</label>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <textarea matInput formControlName="medication" rows="5" placeholder="Incluyendo dosis y pauta...">
+      </textarea>
+    </mat-form-field>
+  </div>
+
+  <div class="step-actions">
+    <button mat-button type="button" matStepperNext>Siguiente</button>
+  </div>
+
+</div>

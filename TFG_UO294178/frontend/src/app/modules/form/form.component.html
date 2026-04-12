@@ -1,0 +1,58 @@
+<app-header></app-header>
+
+<div class="form-container">
+  <mat-card class="main-card">
+
+    <div class="form-toolbar">
+      <button mat-stroked-button type="button" (click)="exitForm()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver al escritorio
+      </button>
+
+      <span class="toolbar-spacer"></span>
+
+      <button mat-stroked-button type="button">
+        <mat-icon>save</mat-icon>
+        Guardar borrador
+      </button>
+    </div>
+
+    <mat-card-header class="header-bg">
+      <mat-card-title>Informe Preoperatorio</mat-card-title>
+      <mat-card-subtitle>Comité Perioperatorio</mat-card-subtitle>
+    </mat-card-header>
+
+    <div class="form-page">
+      <mat-horizontal-stepper [linear]="false">
+
+        <mat-step [stepControl]="generalForm" label="Datos Generales">
+          <app-general-step [form]="generalForm"></app-general-step>
+        </mat-step>
+
+        <mat-step [stepControl]="functionalForm" label="Situación Funcional">
+          <app-functional-step [form]="functionalForm" [barthelQuestions]="barthelQuestions" [frailScore]="frailScore"
+            [frailInterpretation]="frailInterpretation" [barthelScore]="barthelScore"
+            [barthelInterpretation]="barthelInterpretation" (openRiskTable)="openRiskTable()"
+            (openAsaTable)="openASATable()">
+          </app-functional-step>
+        </mat-step>
+
+        <mat-step [stepControl]="biometricsForm" label="Biometría y Vía Aérea">
+          <app-biometrics-step [biometricsForm]="biometricsForm" [airwayForm]="airwayForm" [imcValue]="imcValue">
+          </app-biometrics-step>
+        </mat-step>
+
+        <mat-step [stepControl]="labsForm" label="Analítica">
+          <app-labs-step [form]="labsForm"></app-labs-step>
+        </mat-step>
+
+        <mat-step [stepControl]="conclusionForm" label="Conclusión">
+          <app-conclusion-step [form]="conclusionForm" [isDelayed]="isDelayed" (submitForm)="onSubmit()">
+          </app-conclusion-step>
+        </mat-step>
+
+      </mat-horizontal-stepper>
+    </div>
+
+  </mat-card>
+</div>

@@ -1,0 +1,112 @@
+.dashboard-container {
+  padding: 2rem;
+  background-color: #f5f7fa; 
+  min-height: calc(100vh - 64px);
+}
+
+.welcome-banner {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.welcome-banner h1 {
+  color: #005eb8; 
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-banner p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* --- GRID DE TARJETAS --- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 1.5rem;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 94, 184, 0.15); 
+  border-color: #005eb8;
+}
+
+.card-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* --- ICONO CIRCULAR --- */
+.icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.icon-circle mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: white;
+}
+
+/* Variaciones de color para los iconos */
+.icon-circle.primary {
+  background-color: #005eb8;
+  box-shadow: 0 4px 10px rgba(0, 94, 184, 0.3);
+}
+
+.icon-circle.accent {
+  background-color: #009688; 
+  box-shadow: 0 4px 10px rgba(0, 150, 136, 0.3);
+}
+
+.icon-circle.warn {
+  background-color: #ff9800; 
+  box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+}
+
+/* --- TEXTOS --- */
+.text-content {
+  flex-grow: 1;
+}
+
+mat-card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem !important;
+  color: #1e293b;
+}
+
+mat-card-subtitle {
+  color: #005eb8;
+  font-weight: 500;
+  margin-bottom: 0.5rem !important;
+}
+
+.description {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}

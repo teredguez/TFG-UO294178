@@ -1,0 +1,99 @@
+.history-container {
+  padding: 2rem;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+}
+
+/* HEADER */
+.welcome-banner {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.welcome-banner h1 {
+  color: #005eb8;
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-banner p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* GRID */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* CARD */
+.history-card {
+  cursor: default;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 1.5rem;
+}
+
+.history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 94, 184, 0.15);
+  border-color: #005eb8;
+}
+
+/* CONTENIDO */
+.card-content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+/* ICONO */
+.icon-circle {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-circle.primary {
+  background-color: #005eb8;
+  box-shadow: 0 4px 10px rgba(0, 94, 184, 0.3);
+}
+
+.icon-circle mat-icon {
+  color: white;
+}
+
+/* TEXTO */
+.text-content {
+  flex: 1;
+}
+
+mat-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+mat-card-subtitle {
+  color: #005eb8;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}

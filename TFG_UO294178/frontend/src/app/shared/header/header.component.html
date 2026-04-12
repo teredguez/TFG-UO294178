@@ -1,0 +1,49 @@
+<mat-toolbar color="primary" class="navbar">
+
+  <span class="logo">SERGAS</span>
+  <span class="description">Sistema de Informes Preoperatorios</span>
+
+  <!-- Desplazar todo lo demás a la derecha -->
+  <span class="spacer"></span>
+
+  <!-- Si usuario loggeado -->
+  @if (user$ | async; as user) {
+
+  <div class="user-info" [matMenuTriggerFor]="userMenu">
+    <div class="user-display">
+      <span class="user-name">
+        Dr. {{ user.displayName }}
+      </span>
+
+      <div class="avatar-circle" [class.admin-avatar]="user.role === 'admin'">
+        {{ getInitial(user) }}
+      </div>
+    </div>
+  </div>
+
+    <!-- Menú Desplegable -->
+    <mat-menu #userMenu="matMenu" >
+
+      <!-- Panel Admin -->
+      @if (user.role === 'admin') {
+        <button mat-menu-item routerLink="/admin">
+          <mat-icon>admin_panel_settings</mat-icon>
+          <span>Panel de Control</span>
+        </button>
+        <mat-divider></mat-divider>
+      }
+
+      <!-- Perfil -->
+      <button mat-menu-item >
+        <mat-icon>person</mat-icon>
+        <span>Perfil</span>
+      </button>
+
+      <!-- Cerrar Sesión -->
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar Sesión</span>
+      </button>
+    </mat-menu>
+  }
+</mat-toolbar>
