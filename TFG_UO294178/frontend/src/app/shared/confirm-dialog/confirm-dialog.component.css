@@ -1,0 +1,24 @@
+h2 {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+p {
+  color: #64748b;
+  margin: 0;
+}
+
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+mat-dialog-content {
+  overflow: hidden;
+  max-height: none;
+}
+
+mat-dialog-actions {
+  padding: 1rem 1rem 1rem;
+  gap: 0.5rem;
+}

@@ -1,0 +1,90 @@
+<app-header></app-header>
+
+<div class="drafts-container">
+
+  <div class="welcome-banner">
+    <button mat-stroked-button type="button" (click)="exit()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al escritorio
+    </button>
+
+    <h1>Borradores</h1>
+    <p>Consulta y continúa informes guardados sin finalizar</p>
+  </div>
+
+  @if (loading) {
+  <div class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando borradores...</p>
+  </div>
+  }
+
+  @if (!loading && drafts.length === 0) {
+  <mat-card class="empty-card">
+    <mat-icon>drafts</mat-icon>
+    <h2>No hay borradores guardados</h2>
+    <p>Cuando guardes un formulario como borrador aparecerá aquí.</p>
+  </mat-card>
+  }
+
+  @if (!loading && drafts.length > 0) {
+  <div class="cards-grid">
+
+    @for (draft of drafts; track draft.id) {
+    <mat-card class="draft-card">
+
+      <div class="card-content-wrapper">
+
+        <div class="icon-circle accent">
+          <mat-icon>drafts</mat-icon>
+        </div>
+
+        <div class="text-content">
+          <mat-card-title>
+            {{ draft.patient_code || 'Borrador sin código' }}
+          </mat-card-title>
+
+          <mat-card-subtitle>
+            Última modificación:
+            {{ draft.updated_at || draft.created_at | date:'dd/MM/yy HH:mm' }}
+          </mat-card-subtitle>
+
+          <p class="description">
+            <strong>Fecha Inclusión LE:</strong>
+            {{ draft.list_date ? (draft.list_date | date:'dd/MM/yy') : '—' }}
+            <br>
+
+            <strong>Diagnóstico:</strong>
+            {{ draft.diagnosis || '—' }}
+            <br>
+
+            <strong>Cirugía:</strong>
+            {{ draft.surgery || '—' }}
+            <br>
+
+            <strong>Decisión:</strong>
+            {{ draft.decision || '—' }}
+          </p>
+
+          <div class="draft-actions">
+            <button mat-raised-button color="primary" (click)="continueDraft(draft.id)">
+              <mat-icon>edit</mat-icon>
+              Editar
+            </button>
+
+            <button mat-stroked-button color="warn" (click)="deleteDraft(draft.id)">
+              <mat-icon>delete</mat-icon>
+              Eliminar
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </mat-card>
+    }
+
+  </div>
+  }
+
+</div>

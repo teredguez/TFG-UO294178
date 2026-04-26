@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReportsService } from '../../core/services/report.service';
 import { MaterialModule } from '../../core/material/material-module';
 import { HeaderComponent } from '../../shared/header/header.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-history',
@@ -13,6 +14,7 @@ import { HeaderComponent } from '../../shared/header/header.component';
 })
 export class HistoryComponent implements OnInit {
   private reportsService = inject(ReportsService);
+  private router = inject(Router);
 
   reports: any[] = [];
   loading = true;
@@ -41,5 +43,9 @@ export class HistoryComponent implements OnInit {
     }
   });
 }
+
+exit(): void {
+    this.router.navigate(['/dashboard']);
+  }
 
 }

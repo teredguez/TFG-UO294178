@@ -84,8 +84,211 @@ async function viewReport(req, res, next) {
     return next(error);
   }
 }
+
+async function getProfileActivity(req, res, next) {
+  try {
+    const summary = await reportRepository.getUserReportSummary(req.user.id);
+    const recentReports = await reportRepository.getRecentReportsByUser(req.user.id);
+
+    return res.json({
+      summary,
+      recentReports
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+//Borradores
+async function saveDraft(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const {
+      draftId,
+      patientCode,
+      diagnosis,
+      surgery,
+      decision,
+      listDate,
+      formData
+    } = req.body;
+
+    let draft;
+
+    if (draftId) {
+      draft = await reportRepository.updateDraft({
+        draftId,
+        userId,
+        diagnosis,
+        surgery,
+        decision,
+        listDate,
+        formData
+      });
+    } else {
+      draft = await reportRepository.createDraft({
+        userId,
+        patientCode,
+        diagnosis,
+        surgery,
+        decision,
+        listDate,
+        formData
+      });
+    }
+
+    if (!draft) {
+      return res.status(404).json({ message: 'Borrador no encontrado' });
+    }
+
+    res.json({
+      message: 'Borrador guardado correctamente',
+      draft
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getDrafts(req, res, next) {
+  try {
+    const drafts = await reportRepository.getDraftsByUser(req.user.id);
+    res.json(drafts);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getDraftById(req, res, next) {
+  try {
+    const draftId = req.params.id;
+    const userId = req.user.id;
+
+    const draft = await reportRepository.getDraftById(draftId, userId);
+
+    if (!draft) {
+      return res.status(404).json({ error: 'Borrador no encontrado.' });
+    }
+
+    res.json(draft);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function completeDraft({
+  draftId,
+  userId,
+  patientCode,
+  diagnosis,
+  surgery,
+  decision,
+  listDate,
+  pdfFilename,
+  pdfPath,
+  formData
+}) {
+  const query = `
+    UPDATE reports
+    SET
+      patient_code = $1,
+      diagnosis = $2,
+      surgery = $3,
+      decision = $4,
+      list_date = $5,
+      pdf_filename = $6,
+      pdf_path = $7,
+      form_data = $8,
+      status = 'completed',
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $9
+      AND user_id = $10
+      AND status = 'draft'
+    RETURNING *
+  `;
+
+  const values = [
+    patientCode,
+    diagnosis,
+    surgery,
+    decision,
+    listDate || null,
+    pdfFilename,
+    pdfPath,
+    formData,
+    draftId,
+    userId
+  ];
+
+  const result = await db.query(query, values);
+  return result.rows[0] || null;
+}
+
+async function completeDraft(req, res, next) {
+  try {
+    const draftId = req.params.id;
+    const userId = req.user.id;
+
+    const data = JSON.parse(req.body.data);
+    const file = req.file;
+
+    const completedDraft = await reportRepository.completeDraft({
+      draftId,
+      userId,
+      patientCode:
+        data.patientCode ||
+        data.patient_code ||
+        data.general?.patientCode ||
+        `BOR-${Date.now()}`,
+      diagnosis: data.diagnosis || data.general?.diagnosis || null,
+      surgery: data.surgery || data.general?.surgery || null,
+      decision: data.decision || data.conclusion?.decision || null,
+      listDate: data.listDate || data.general?.listDate || null,
+      pdfFilename: file.filename,
+      pdfPath: file.path,
+      formData: data
+    });
+
+    if (!completedDraft) {
+      return res.status(404).json({ error: 'Borrador no encontrado.' });
+    }
+
+    res.json({
+      message: 'Borrador completado correctamente.',
+      report: completedDraft
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function deleteDraft(req, res, next) {
+  try {
+    const draftId = req.params.id;
+    const userId = req.user.id;
+
+    const deletedDraft = await reportRepository.deleteDraft(draftId, userId);
+
+    if (!deletedDraft) {
+      return res.status(404).json({ error: 'Borrador no encontrado.' });
+    }
+
+    res.json({
+      message: 'Borrador eliminado correctamente.'
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   createReport,
   getMyReports,
-  viewReport
+  viewReport,
+  getProfileActivity,
+  saveDraft,
+  getDrafts,
+  getDraftById,
+  completeDraft,
+  deleteDraft
 };

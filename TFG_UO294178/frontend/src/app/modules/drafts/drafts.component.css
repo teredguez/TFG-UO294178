@@ -1,4 +1,4 @@
-.history-container {
+.drafts-container {
   padding: 2rem;
   background-color: #f5f7fa;
   min-height: calc(100vh - 64px);
@@ -30,25 +30,25 @@
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1300px;
   margin: 0 auto;
   align-items: stretch;
 }
 
-.history-card {
+.draft-card {
   cursor: default;
   transition: all 0.3s ease;
   border-radius: 12px;
   border: 1px solid transparent;
-  padding: 1.25rem;
-  height: 230px;
+  padding: 1.5rem;
+  height: 280px;
   box-sizing: border-box;
   display: flex;
 }
 
-.history-card:hover {
+.draft-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0, 94, 184, 0.15);
   border-color: #005eb8;
@@ -57,22 +57,22 @@
 .card-content-wrapper {
   display: flex;
   align-items: flex-start;
-  gap: 1.25rem;
+  gap: 1.5rem;
   width: 100%;
   height: 100%;
 }
 
 .icon-circle {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 55px;
+  height: 55px;
+  min-width: 55px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.icon-circle.primary {
+.icon-circle.accent {
   background-color: #005eb8;
   box-shadow: 0 4px 10px rgba(0, 94, 184, 0.3);
 }
@@ -83,13 +83,14 @@
 
 .text-content {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
 mat-card-title {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #1e293b;
 }
@@ -97,19 +98,65 @@ mat-card-title {
 mat-card-subtitle {
   color: #005eb8;
   font-weight: 500;
-  margin-bottom: 0.4rem;
-  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
 }
 
 .description {
   color: #64748b;
-  font-size: 0.88rem;
-  margin: 0.5rem 0 0.75rem;
-  line-height: 1.35;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 1rem;
+  line-height: 1.4;
 }
 
-.text-content button {
+.draft-actions {
   margin-top: auto;
-  align-self: flex-start;
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.draft-actions button {
+  min-width: 120px;
+  height: 44px;
+  font-size: 0.85rem;
+}
+
+.draft-actions mat-icon {
+  margin-right: 0.25rem;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem;
+  color: #64748b;
+}
+
+.empty-card {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.empty-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #005eb8;
+  margin-bottom: 1rem;
+}
+
+.empty-card h2 {
+  color: #1e293b;
+  font-weight: 400;
+}
+
+.empty-card p {
+  color: #64748b;
 }

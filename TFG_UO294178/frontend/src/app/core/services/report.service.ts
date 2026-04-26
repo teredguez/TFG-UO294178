@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,48 @@ export class ReportsService {
   viewReport(reportId: number) {
     return this.http.get(`${this.API_URL}/${reportId}/view`, {
       responseType: 'blob',
+      withCredentials: true
+    });
+  }
+
+  getProfileActivity() {
+    return this.http.get<any>(`${this.API_URL}/profile/activity`, {
+      withCredentials: true
+    });
+  }
+
+  saveDraft(payload: any): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/drafts`, payload, {
+      withCredentials: true
+    });
+  }
+
+  getDrafts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_URL}/drafts`, {
+      withCredentials: true
+    });
+  }
+
+  getDraftById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.API_URL}/drafts/${id}`, {
+      withCredentials: true
+    });
+
+  }
+
+  completeDraft(id: number, file: File, reportData: any): Observable<any> {
+    const formData = new FormData();
+
+    formData.append('pdf', file);
+    formData.append('data', JSON.stringify(reportData));
+
+    return this.http.put<any>(`${this.API_URL}/drafts/${id}/complete`, formData, {
+      withCredentials: true
+    });
+  }
+
+  deleteDraft(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.API_URL}/drafts/${id}`, {
       withCredentials: true
     });
   }

@@ -43,12 +43,12 @@ export class DashboardComponent {
       description: 'Buscar y revisar informes antiguos.'
     },
     {
-      title: 'nueva funcionalidad',
-      subtitle: '',
-      icon: '',
-      route: '',
-      color: '',
-      description: '.'
+      title: 'Borradores',
+      subtitle: 'Informes pendientes',
+      icon: 'edit_note',
+      route: '/drafts',
+      color: 'primary',
+      description: 'Continuar informes guardados como borrador.'
     }
 
   ];

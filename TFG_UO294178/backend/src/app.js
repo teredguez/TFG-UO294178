@@ -12,14 +12,14 @@ const reportRoutes = require('./routes/report.routes');
 
 const app = express();
 
-app.use(helmet());
-app.use(globalLimiter);
 app.use(corsMiddleware);
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessionMiddleware);
 
 configurePassport(app);
+app.use(globalLimiter);
 
 app.use('/api', authRoutes);
 app.use('/api/admin', adminRoutes);

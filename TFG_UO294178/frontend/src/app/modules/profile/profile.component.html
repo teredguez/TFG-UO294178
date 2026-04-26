@@ -1,0 +1,84 @@
+<app-header></app-header>
+
+<div class="profile-container">
+
+  <div class="form-toolbar">
+    <button mat-stroked-button type="button" (click)="exit()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al escritorio
+    </button>
+  </div>
+  <div class="profile-header">
+    <div class="avatar-large">
+      {{ getInitial() }}
+    </div>
+
+    <div>
+      <h1>Dr. {{ user?.displayName }}</h1>
+      <p>{{ user?.email }}</p>
+      <span class="role-badge">{{ user?.role }}</span>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <div class="stat-icon"><mat-icon>description</mat-icon></div>
+      <div class="stat-body">
+        <h2>{{ (summary?.total_reports || 0) | number }}</h2>
+        <p>Informes generados</p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon"><mat-icon>fact_check</mat-icon></div>
+      <div class="stat-body">
+        <h2 class="decision-stat">
+          {{ summary?.most_frequent_decision || '—' }}
+        </h2>
+        <p>
+          Decisión más frecuente
+          @if (summary?.most_frequent_decision_count) {
+          · {{ summary.most_frequent_decision_count }} casos
+          }
+        </p>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon"><mat-icon>event</mat-icon></div>
+      <div class="stat-body">
+        <h2>{{ summary?.last_report_date ? (summary.last_report_date | date:'dd/MM/yy') : '—' }}</h2>
+        <p>Último informe</p>
+      </div>
+    </mat-card>
+  </div>
+
+  <mat-card class="activity-card">
+    <div class="activity-header">
+      <h2>Actividad reciente</h2>
+      <span class="activity-meta">Últimos informes</span>
+    </div>
+
+    @if (recentReports.length === 0) {
+    <p class="empty">Todavía no hay informes generados.</p>
+    }
+
+    @for (report of recentReports; track report.id) {
+    <div class="activity-item">
+      <div class="activity-icon"><mat-icon>description</mat-icon></div>
+      <div class="activity-text">
+        <h3>
+          {{ report.patient_code }}
+          @if (report.decision) {
+          <span class="decision-pill" [ngClass]="'pill-' + report.decision.toLowerCase()">
+            {{ report.decision }}
+          </span>
+          }
+        </h3>
+        <p>{{ report.diagnosis || 'Sin diagnóstico' }} · {{ report.created_at | date:'dd/MM/yyyy HH:mm' }}</p>
+      </div>
+    </div>
+    }
+  </mat-card>
+
+</div>
