@@ -52,7 +52,7 @@ Para ejecutar la aplicación únicamente es necesario disponer de:
 Situarse en la raíz del proyecto:
 
 ```bash
-cd TFGUO294178
+cd TFG_UO294178
 ```
 
 Construir las imágenes e iniciar todos los servicios:
