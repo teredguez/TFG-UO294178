@@ -12,7 +12,7 @@ export interface RegisterData {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
@@ -38,40 +38,37 @@ export class AuthService {
    * Si es correcto, el navegador guarda la cookie automáticamente.
    */
   login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(
-      `${this.API_URL}/login`,
-      { email, password },
-      { withCredentials: true }
-    ).pipe(
-      tap(response => {
-        // Si el login funciona, el backend nos devuelve el usuario
-        if (response.user) {
-          const user: AppUser = {
-            uid: response.user.id,        // Adaptamos el ID numérico a 'uid'
-            email: response.user.email,
-            role: response.user.role,
-            displayName: response.user.name
-          };
-          // Guardamos el usuario en nuestra "caja" local
-          this.currentUserSubject.next(user);
+    return this.http
+      .post<any>(`${this.API_URL}/login`, { email, password }, { withCredentials: true })
+      .pipe(
+        tap((response) => {
+          // Si el login funciona, el backend nos devuelve el usuario
+          if (response.user) {
+            const user: AppUser = {
+              uid: response.user.id, // Adaptamos el ID numérico a 'uid'
+              email: response.user.email,
+              role: response.user.role,
+              displayName: response.user.name,
+            };
+            // Guardamos el usuario en nuestra "caja" local
+            this.currentUserSubject.next(user);
 
-          // Redirigimos al dashboard
-          this.router.navigate(['/dashboard']);
-        }
-      })
-    );
+            if (user.role === 'admin') {
+              this.router.navigate(['/admin/dashboard']);
+            } else {
+              this.router.navigate(['/dashboard']);
+            }
+          }
+        }),
+      );
   }
 
   /**
    * REGISTRO (ACTIVAR CUENTA)
    * Envía los datos para establecer contraseña y activar el usuario.
    */
-    register(data: RegisterData): Observable<any> {
-    return this.http.post(
-      `${this.API_URL}/register`,
-      data,
-      { withCredentials: true }
-    );
+  register(data: RegisterData): Observable<any> {
+    return this.http.post(`${this.API_URL}/register`, data, { withCredentials: true });
   }
 
   /**
@@ -79,11 +76,7 @@ export class AuthService {
    * Envía el email del nuevo usuario al backend para que envíe la invitación.
    */
   inviteUser(email: string): Observable<any> {
-    return this.http.post(
-      `${this.API_URL}/admin/invite`,
-      { email },
-      { withCredentials: true }
-    );
+    return this.http.post(`${this.API_URL}/admin/invite`, { email }, { withCredentials: true });
   }
 
   /**
@@ -91,16 +84,15 @@ export class AuthService {
    * Avisa al backend para destruir la sesión y borra el estado local.
    */
   logout() {
-    return this.http.post(
-      `${this.API_URL}/logout`,
-      {},
-      { withCredentials: true }
-    ).pipe(
-      tap(() => {
-        this.currentUserSubject.next(null); // Vaciamos la caja
-        this.router.navigate(['/login']);
-      })
-    ).subscribe();
+    return this.http
+      .post(`${this.API_URL}/logout`, {}, { withCredentials: true })
+      .pipe(
+        tap(() => {
+          this.currentUserSubject.next(null); // Vaciamos la caja
+          this.router.navigate(['/login']);
+        }),
+      )
+      .subscribe();
   }
 
   /**
@@ -108,17 +100,14 @@ export class AuthService {
    * Se llama al recargar la página para ver si la cookie sigue siendo válida.
    */
   checkSession(): Observable<AppUser | null> {
-    return this.http.get<any>(
-      `${this.API_URL}/me`,
-      { withCredentials: true }
-    ).pipe(
-      map(response => {
+    return this.http.get<any>(`${this.API_URL}/me`, { withCredentials: true }).pipe(
+      map((response) => {
         if (response.user) {
           const user: AppUser = {
             uid: response.user.id,
             email: response.user.email,
             role: response.user.role,
-            displayName: response.user.name
+            displayName: response.user.name,
           };
           this.currentUserSubject.next(user); // Restauramos al usuario
           return user;
@@ -129,7 +118,15 @@ export class AuthService {
         // Si el backend da error (401), es que no hay sesión válida
         this.currentUserSubject.next(null);
         return of(null);
-      })
+      }),
     );
+  }
+
+  getUsers() {
+    return this.http.get<any[]>(`${this.API_URL}/admin/users`, { withCredentials: true });
+  }
+
+  deleteUser(id: number) {
+    return this.http.delete(`${this.API_URL}/admin/users/${id}`, { withCredentials: true });
   }
 }

@@ -1,0 +1,88 @@
+.dashboard-container {
+  padding: 2rem;
+  background-color: #f5f7fa;
+  min-height: calc(100vh - 64px);
+}
+
+.welcome-banner {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.welcome-banner h1 {
+  color: #005eb8;
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-banner p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 60px;
+  height: 60px;
+
+  border-radius: 12px;
+  background: #e8f1fb;
+}
+
+.card-icon mat-icon {
+  color: #005eb8;
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.card-content h3 {
+  margin: 0 0 0.5rem;
+  color: #1e293b;
+}
+
+.card-content p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}

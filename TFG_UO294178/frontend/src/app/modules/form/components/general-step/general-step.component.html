@@ -1,10 +1,14 @@
 <div [formGroup]="form" class="step-content">
-
   <div class="form-field">
     <label class="field-label required">Diagnóstico</label>
 
     <mat-form-field appearance="outline" class="full-width">
-      <textarea matInput formControlName="diagnosis" rows="5" placeholder="Descripción del diagnóstico principal...">
+      <textarea
+        matInput
+        formControlName="diagnosis"
+        rows="5"
+        placeholder="Descripción del diagnóstico principal..."
+      >
       </textarea>
     </mat-form-field>
   </div>
@@ -13,9 +17,42 @@
     <label class="field-label required">Cirugía Prevista</label>
 
     <mat-form-field appearance="outline" class="full-width">
-      <textarea matInput formControlName="surgery" rows="1" placeholder="Procedimiento quirúrgico previsto...">
+      <textarea
+        matInput
+        formControlName="surgery"
+        rows="1"
+        placeholder="Procedimiento quirúrgico previsto..."
+      >
       </textarea>
     </mat-form-field>
+  </div>
+
+  <div class="grid-2">
+    <div class="form-field">
+      <label class="field-label required">Edad</label>
+
+      <mat-form-field appearance="outline">
+        <input
+          matInput
+          type="number"
+          formControlName="age"
+          min="20"
+          max="120"
+          placeholder="Edad del paciente"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="form-field">
+      <label class="field-label required">Sexo</label>
+
+      <mat-form-field appearance="outline">
+        <mat-select formControlName="sex" placeholder="Seleccionar sexo">
+          <mat-option value="1">Hombre</mat-option>
+          <mat-option value="0">Mujer</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
 
   <div class="grid-2">
@@ -23,7 +60,12 @@
       <label class="field-label">Fecha Inclusión LE</label>
 
       <mat-form-field appearance="outline">
-        <input matInput [matDatepicker]="picker" formControlName="listDate" placeholder="Seleccionar fecha">
+        <input
+          matInput
+          [matDatepicker]="picker"
+          formControlName="listDate"
+          placeholder="Seleccionar fecha"
+        />
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -46,16 +88,48 @@
     <label class="field-label">Antecedentes Personales</label>
 
     <mat-form-field appearance="outline" class="full-width">
-      <textarea matInput formControlName="history" rows="5" placeholder="Cardiopatías, alergias, patologías previas...">
+      <textarea
+        matInput
+        formControlName="history"
+        rows="5"
+        placeholder="Cardiopatías, alergias, patologías previas..."
+      >
       </textarea>
     </mat-form-field>
+
+    <mat-button-toggle-group multiple class="toggle-group">
+      <mat-button-toggle
+        [checked]="form.get('ischemicHeartDisease')?.value"
+        (change)="form.get('ischemicHeartDisease')?.setValue($event.source.checked)"
+      >
+        Cardiopatía Isquémica
+      </mat-button-toggle>
+
+      <mat-button-toggle
+        [checked]="form.get('heartFailure')?.value"
+        (change)="form.get('heartFailure')?.setValue($event.source.checked)"
+      >
+        Insuficiencia Cardíaca
+      </mat-button-toggle>
+      <mat-button-toggle
+        [checked]="form.get('diabetes')?.value"
+        (change)="form.get('diabetes')?.setValue($event.source.checked)"
+      >
+        Diabetes
+      </mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
 
   <div class="form-field">
     <label class="field-label">Tratamientos Domiciliarios</label>
 
     <mat-form-field appearance="outline" class="full-width">
-      <textarea matInput formControlName="medication" rows="5" placeholder="Incluyendo dosis y pauta...">
+      <textarea
+        matInput
+        formControlName="medication"
+        rows="5"
+        placeholder="Incluyendo dosis y pauta..."
+      >
       </textarea>
     </mat-form-field>
   </div>
@@ -63,5 +137,4 @@
   <div class="step-actions">
     <button mat-button type="button" matStepperNext>Siguiente</button>
   </div>
-
 </div>

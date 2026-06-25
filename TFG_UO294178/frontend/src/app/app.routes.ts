@@ -3,11 +3,13 @@ import { LoginComponent } from './modules/auth/login/login.component';
 import { FormComponent } from './modules/form/form.component';
 import { authGuard } from './core/guards/auth.guard';
 import { RegisterComponent } from './modules/auth/register/register.component';
-import { AdminComponent } from './modules/admin/admin.component';
+import { AdminComponent } from './modules/admin/adminPanel/admin.component';
 import { DashboardComponent } from './modules/dashboard/dashboard.component';
 import { HistoryComponent } from './modules/history/history.component';
 import { ProfileComponent } from './modules/profile/profile.component';
 import { DraftsComponent } from './modules/drafts/drafts.component';
+import { AdminDashboardComponent } from './modules/admin/adminDashboard/admin-dashboard';
+import { UserListComponent } from './modules/admin/user-list/user-list.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,40 +19,48 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
-
+  {
+    path: 'admin/dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'admin/users',
+    component: UserListComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
 
   {
     path: 'form',
     component: FormComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
 
   {
     path: 'history',
     component: HistoryComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
 
   {
     path: 'drafts',
     component: DraftsComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   //Por defecto ir al login
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   //Redirigir cualquier ruta desconocida al login
-  { path: '**', redirectTo: '/login' }
+  { path: '**', redirectTo: '/login' },
 ];
-

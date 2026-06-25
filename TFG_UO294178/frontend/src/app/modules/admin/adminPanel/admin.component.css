@@ -1,10 +1,8 @@
 .admin-container {
-  display: flex;
-  justify-content: center;
-  align-items: center; 
+  padding: 2rem;
+  background-color: #f5f7fa;
   min-height: calc(100vh - 64px);
-  background-color: #f0f2f5; 
-  padding: 1rem;
+  
 }
 
 .admin-card {
@@ -15,6 +13,7 @@
   width: 100%;
   max-width: 500px; 
   text-align: center; 
+  margin: 0 auto;
 }
 
 .card-header h2 {
@@ -105,4 +104,28 @@ input:focus {
   background-color: #f8d7da;
   color: #721c24;
   border: 1px solid #f5c6cb;
+}
+
+.welcome-banner {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.welcome-banner button {
+  margin-bottom: 1rem;
+  margin-top: -0.5rem;
+}
+
+.welcome-banner h1 {
+  color: #005eb8;
+  font-size: 2rem;
+  font-weight: 300;
+  margin: 0 0 0.5rem 0;
+}
+
+.welcome-banner p {
+  color: #64748b;
+  margin: 0;
+  font-size: 1.1rem;
 }

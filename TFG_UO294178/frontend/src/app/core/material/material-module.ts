@@ -15,6 +15,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
 @NgModule({
   declarations: [],
   imports: [
@@ -32,7 +34,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatExpansionModule,
     MatDividerModule,
     MatIcon,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonToggleModule
   ],
   exports: [ 
     CommonModule,
@@ -50,6 +53,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatDividerModule,
     MatIcon,
     MatDialogModule,
+    MatButtonToggleModule
   ]
 })
 export class MaterialModule { }

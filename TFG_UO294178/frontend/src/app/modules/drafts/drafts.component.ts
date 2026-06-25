@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { ReportsService } from '../../core/services/report.service';
 import { MaterialModule } from '../../core/material/material-module';
 import { HeaderComponent } from '../../shared/header/header.component';
@@ -10,13 +11,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'app-drafts',
   standalone: true,
-  imports: [CommonModule, MaterialModule, HeaderComponent,MatProgressSpinnerModule],
+  imports: [CommonModule, MaterialModule, HeaderComponent, MatProgressSpinnerModule],
   templateUrl: './drafts.component.html',
-  styleUrls: ['./drafts.component.css']
+  styleUrls: ['./drafts.component.css'],
 })
 export class DraftsComponent implements OnInit {
   private reportsService = inject(ReportsService);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
 
   drafts: any[] = [];
   loading = true;
@@ -34,29 +36,44 @@ export class DraftsComponent implements OnInit {
       error: (err) => {
         console.error('Error cargando borradores', err);
         this.loading = false;
-      }
+      },
     });
   }
 
   continueDraft(draftId: number): void {
     this.router.navigate(['/form'], {
-      queryParams: { draftId }
+      queryParams: { draftId },
     });
   }
 
-  deleteDraft(draftId: number): void {
-  const confirmDelete = confirm('¿Seguro que quieres eliminar este borrador?');
+  deleteDraft(id: number): void {
 
-  if (!confirmDelete) return;
-
-  this.reportsService.deleteDraft(draftId).subscribe({
-    next: () => {
-      this.drafts = this.drafts.filter(draft => draft.id !== draftId);
-    },
-    error: (err) => {
-      console.error('Error eliminando borrador:', err);
-      alert('No se pudo eliminar el borrador');
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    width: '420px',
+    data: {
+      title: 'Eliminar borrador',
+      message: '¿Desea eliminar este borrador? Esta acción no se puede deshacer.',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      showCancel: true
     }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+
+    if (!result) {
+      return;
+    }
+
+    this.reportsService.deleteDraft(id).subscribe({
+      next: () => {
+        this.drafts = this.drafts.filter(d => d.id !== id);
+      },
+      error: (err) => {
+        console.error('Error eliminando borrador', err);
+      }
+    });
+
   });
 }
 

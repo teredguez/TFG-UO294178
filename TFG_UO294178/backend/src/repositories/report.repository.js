@@ -82,7 +82,7 @@ async function getUserReportSummary(userId) {
 
 async function getRecentReportsByUser(userId) {
   const query = `
-    SELECT id, patient_code, diagnosis, surgery, decision, list_date, created_at
+    SELECT id, patient_code, diagnosis, surgery, decision, list_date, created_at, form_data
     FROM reports
     WHERE user_id = $1
     ORDER BY created_at DESC
@@ -261,6 +261,52 @@ async function deleteDraft(draftId, userId) {
   return result.rows[0] || null;
 }
 
+async function deleteReport(reportId, userId) {
+  const query = `
+    DELETE FROM reports
+    WHERE id = $1
+      AND user_id = $2
+      AND status = 'completed'
+    RETURNING *
+  `;
+
+  const result = await db.query(query, [
+    reportId,
+    userId
+  ]);
+
+  return result.rows[0] || null;
+}
+
+async function getAsaDistribution(userId) {
+  const query = `
+    SELECT form_data
+    FROM reports
+    WHERE user_id = $1
+      AND status = 'completed'
+  `;
+
+  const result = await db.query(query, [userId]);
+
+  const stats = {
+    I: 0,
+    II: 0,
+    III: 0,
+    IV: 0,
+    V: 0,
+  };
+
+  result.rows.forEach((row) => {
+    const asa = row.form_data?.score_asa;
+
+    if (stats[asa] !== undefined) {
+      stats[asa]++;
+    }
+  });
+
+  return stats;
+}
+
 module.exports = {
   createReport,
   getReportsByUser,
@@ -272,5 +318,7 @@ module.exports = {
   getDraftsByUser,
   getDraftById,
   completeDraft,
-  deleteDraft
+  deleteDraft,
+  deleteReport,
+  getAsaDistribution
 };

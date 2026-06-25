@@ -1,20 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../core/services/auth.service';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { AuthService } from '../../../core/services/auth.service';
+import { HeaderComponent } from '../../../shared/header/header.component';
+import { Router } from '@angular/router';
+import { MaterialModule } from '../../../core/material/material-module';
 
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, HeaderComponent, MaterialModule],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
 export class AdminComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   inviteForm: FormGroup;
   isLoading = false;
@@ -57,4 +60,9 @@ export class AdminComponent {
       }
     });
   }
+
+  exit(): void {
+    this.router.navigate(['/admin/dashboard']);
+  }
+
 }

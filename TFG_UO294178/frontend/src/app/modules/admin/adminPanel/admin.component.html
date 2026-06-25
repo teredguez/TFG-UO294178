@@ -1,5 +1,17 @@
 <app-header></app-header>
 <div class="admin-container">
+  <!-- HEADER -->
+  <div class="welcome-banner">
+    <button mat-stroked-button type="button" (click)="exit()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al escritorio
+    </button>
+
+    <h1>Panel de Administración</h1>
+
+    <p>Gestión de usuarios autorizados para acceder al sistema.</p>
+  </div>
+
   <div class="admin-card">
     <div class="card-header">
       <h2>Panel de Administración</h2>
@@ -16,14 +28,14 @@
     <form [formGroup]="inviteForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="email">Correo del Clínico</label>
-        <input 
-          id="email" 
-          type="email" 
-          formControlName="email" 
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
           placeholder="ejemplo@sergas.es"
           autocomplete="off"
-        >
-        
+        />
+
         <!-- Errores -->
         @if (inviteForm.get('email')?.touched && inviteForm.get('email')?.invalid) {
           <div class="error-container">

@@ -43,7 +43,7 @@
   border-radius: 12px;
   border: 1px solid transparent;
   padding: 1.25rem;
-  height: 230px;
+  height: 250px;
   box-sizing: border-box;
   display: flex;
 }
@@ -104,12 +104,63 @@ mat-card-subtitle {
 .description {
   color: #64748b;
   font-size: 0.88rem;
-  margin: 0.5rem 0 0.75rem;
   line-height: 1.35;
+
+  min-height: 85px;
+  max-height: 85px;
+  overflow: hidden;
+
+  margin: 0.5rem 0 0.75rem;
 }
 
-.text-content button {
+.empty-card {
+  max-width: 500px;
+  margin: 3rem auto;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.empty-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #005eb8;
+  margin-bottom: 1rem;
+}
+
+.empty-card h2 {
+  color: #1e293b;
+  font-weight: 400;
+}
+
+.empty-card p {
+  color: #64748b;
+}
+
+.report-actions {
   margin-top: auto;
-  align-self: flex-start;
-  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.report-actions button {
+  min-width: 120px;
+  height: 44px;
+  font-size: 0.85rem;
+}
+
+.report-actions mat-icon {
+  margin-right: 0.25rem;
+}
+
+.description {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 0.5rem 0 0.75rem;
+  line-height: 1.35;
+
+  min-height: 70px;
 }

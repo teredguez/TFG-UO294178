@@ -7,10 +7,12 @@
     <p>Selecciona una acción para comenzar.</p>
   </div>
 
+  <!-- TARJETAS PRINCIPALES -->
+
   <div class="cards-grid">
-    <!-- Para cada opción del menú-->
     @for (item of menuItems; track item.title) {
       <mat-card class="menu-card" [routerLink]="item.route">
+
         <div class="card-content-wrapper">
 
           <div class="icon-circle" [ngClass]="item.color">
@@ -24,7 +26,177 @@
           </div>
 
         </div>
+
       </mat-card>
     }
   </div>
+
+  <!-- DASHBOARD INFERIOR -->
+
+  <div class="dashboard-widgets">
+
+    <!-- COLUMNA IZQUIERDA -->
+
+    <div class="dashboard-left">
+
+      <!-- IA -->
+
+      <div class="ai-banner-mini">
+        <div class="ai-icon">
+          <mat-icon>psychology</mat-icon>
+        </div>
+
+        <div class="ai-content">
+
+          <h3>Asistente Predictivo</h3>
+
+          @if (lastPrediction) {
+            <p>
+              Último riesgo cardiovascular estimado:
+              <strong>{{ lastPrediction }}</strong>
+            </p>
+          } @else {
+            <p>
+              Aún no se han generado predicciones de riesgo cardiovascular.
+            </p>
+          }
+
+          <span>
+            Modelo de regresión logística entrenado con NHANES integrado en la generación de informes.
+          </span>
+
+        </div>
+      </div>
+
+      <!-- BORRADORES -->
+
+      @if (draftsCount > 0) {
+
+        <div class="pending-banner">
+
+          <div class="pending-icon">
+            <mat-icon>drafts</mat-icon>
+          </div>
+
+          <div class="pending-content">
+
+            <h3>Pacientes pendientes</h3>
+
+            <p>
+              Existen <strong>{{ draftsCount }}</strong>
+              borradores pendientes de completar.
+            </p>
+
+            @if (lastDraft) {
+              <span>
+                Último borrador:
+                {{ lastDraft.patient_code || 'Sin código' }}
+              </span>
+            }
+
+          </div>
+
+          <button
+            mat-stroked-button
+            color="primary"
+            routerLink="/drafts">
+
+            Revisar
+
+          </button>
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+
+    <div class="dashboard-right">
+
+      @if (asaDistribution) {
+
+        <div class="asa-card">
+
+          <h3>Clasificación ASA · Mis evaluaciones</h3>
+
+          <div class="asa-item">
+            <div class="asa-header">
+              <span>ASA I</span>
+              <strong>{{ asaDistribution.I }}</strong>
+            </div>
+
+            <div class="asa-bar">
+              <div
+                class="asa-fill asa1"
+                [style.width.%]="getAsaPercentage(asaDistribution.I)">
+              </div>
+            </div>
+          </div>
+
+          <div class="asa-item">
+            <div class="asa-header">
+              <span>ASA II</span>
+              <strong>{{ asaDistribution.II }}</strong>
+            </div>
+
+            <div class="asa-bar">
+              <div
+                class="asa-fill asa2"
+                [style.width.%]="getAsaPercentage(asaDistribution.II)">
+              </div>
+            </div>
+          </div>
+
+          <div class="asa-item">
+            <div class="asa-header">
+              <span>ASA III</span>
+              <strong>{{ asaDistribution.III }}</strong>
+            </div>
+
+            <div class="asa-bar">
+              <div
+                class="asa-fill asa3"
+                [style.width.%]="getAsaPercentage(asaDistribution.III)">
+              </div>
+            </div>
+          </div>
+
+          <div class="asa-item">
+            <div class="asa-header">
+              <span>ASA IV</span>
+              <strong>{{ asaDistribution.IV }}</strong>
+            </div>
+
+            <div class="asa-bar">
+              <div
+                class="asa-fill asa4"
+                [style.width.%]="getAsaPercentage(asaDistribution.IV)">
+              </div>
+            </div>
+          </div>
+
+          <div class="asa-item">
+            <div class="asa-header">
+              <span>ASA V</span>
+              <strong>{{ asaDistribution.V }}</strong>
+            </div>
+
+            <div class="asa-bar">
+              <div
+                class="asa-fill asa5"
+                [style.width.%]="getAsaPercentage(asaDistribution.V)">
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
 </div>

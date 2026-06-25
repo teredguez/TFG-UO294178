@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportsService {
   private API_URL = 'http://localhost:3000/api/reports';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   uploadReport(file: File, reportData: any) {
     const formData = new FormData();
@@ -27,48 +27,51 @@ export class ReportsService {
     formData.append('formData', JSON.stringify(reportData));
 
     return this.http.post(this.API_URL, formData, {
-      withCredentials: true
+      withCredentials: true,
     });
-
-
   }
 
   getMyReports() {
     return this.http.get<any>(this.API_URL, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   viewReport(reportId: number) {
     return this.http.get(`${this.API_URL}/${reportId}/view`, {
       responseType: 'blob',
-      withCredentials: true
+      withCredentials: true,
+    });
+  }
+
+  deleteReport(reportId: number): Observable<any> {
+    return this.http.delete<any>(`${this.API_URL}/${reportId}`, {
+      withCredentials: true,
     });
   }
 
   getProfileActivity() {
     return this.http.get<any>(`${this.API_URL}/profile/activity`, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   saveDraft(payload: any): Observable<any> {
     return this.http.post<any>(`${this.API_URL}/drafts`, payload, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   getDrafts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/drafts`, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   getDraftById(id: number): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/drafts/${id}`, {
-      withCredentials: true
+      withCredentials: true,
     });
-
   }
 
   completeDraft(id: number, file: File, reportData: any): Observable<any> {
@@ -78,13 +81,13 @@ export class ReportsService {
     formData.append('data', JSON.stringify(reportData));
 
     return this.http.put<any>(`${this.API_URL}/drafts/${id}/complete`, formData, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 
   deleteDraft(id: number): Observable<any> {
     return this.http.delete<any>(`${this.API_URL}/drafts/${id}`, {
-      withCredentials: true
+      withCredentials: true,
     });
   }
 }

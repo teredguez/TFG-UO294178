@@ -1,5 +1,6 @@
-const reportRepository = require('../repositories/report.repository');
-const path = require('path');
+const reportRepository = require("../repositories/report.repository");
+const path = require("path");
+const fs = require("fs/promises");
 
 function generatePatientCode() {
   return `PAC-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
@@ -10,7 +11,7 @@ function normalizeDate(value) {
     return null;
   }
 
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value.slice(0, 10);
   }
 
@@ -20,7 +21,7 @@ function normalizeDate(value) {
 async function createReport(req, res, next) {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No se ha subido ningún archivo.' });
+      return res.status(400).json({ error: "No se ha subido ningún archivo." });
     }
 
     const { diagnosis, surgery, decision, listDate, formData } = req.body;
@@ -36,12 +37,12 @@ async function createReport(req, res, next) {
       listDate: listDate || null,
       pdfFilename: req.file.filename,
       pdfPath: req.file.path,
-      formData: parsedFormData
+      formData: parsedFormData,
     });
 
     return res.status(201).json({
-      message: 'Informe guardado correctamente.',
-      report
+      message: "Informe guardado correctamente.",
+      report,
     });
   } catch (error) {
     return next(error);
@@ -53,13 +54,12 @@ async function getMyReports(req, res, next) {
     const reports = await reportRepository.getReportsByUser(req.user.id);
 
     return res.json({
-      reports
+      reports,
     });
   } catch (error) {
     return next(error);
   }
 }
-
 
 async function viewReport(req, res, next) {
   try {
@@ -67,17 +67,25 @@ async function viewReport(req, res, next) {
     const report = await reportRepository.getReportById(reportId);
 
     if (!report) {
-      return res.status(404).json({ error: 'Informe no encontrado.' });
+      return res.status(404).json({ error: "Informe no encontrado." });
     }
 
-    if (Number(report.user_id) !== Number(req.user.id) && req.user.role !== 'admin') {
-      return res.status(403).json({ error: 'No autorizado para acceder a este informe.' });
+    if (
+      Number(report.user_id) !== Number(req.user.id) &&
+      req.user.role !== "admin"
+    ) {
+      return res
+        .status(403)
+        .json({ error: "No autorizado para acceder a este informe." });
     }
 
     const absolutePath = path.resolve(report.pdf_path);
 
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `inline; filename="${report.pdf_filename}"`);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `inline; filename="${report.pdf_filename}"`,
+    );
 
     return res.sendFile(absolutePath);
   } catch (error) {
@@ -85,14 +93,70 @@ async function viewReport(req, res, next) {
   }
 }
 
+async function deleteReport(req, res, next) {
+  console.log("DELETE REPORT");
+  console.log("ID:", req.params.id);
+  try {
+    const reportId = req.params.id;
+    const userId = req.user.id;
+
+    const report = await reportRepository.getReportById(reportId);
+
+    if (!report) {
+      return res.status(404).json({
+        error: "Informe no encontrado.",
+      });
+    }
+
+    if (
+      Number(report.user_id) !== Number(userId) &&
+      req.user.role !== "admin"
+    ) {
+      return res.status(403).json({
+        error: "No autorizado para eliminar este informe.",
+      });
+    }
+
+    if (report.pdf_path) {
+      try {
+        await fs.unlink(path.resolve(report.pdf_path));
+      } catch (error) {
+        console.warn("No se pudo eliminar el PDF físico:", error.message);
+      }
+    }
+
+    const deletedReport = await reportRepository.deleteReport(reportId, userId);
+
+    if (!deletedReport) {
+      return res.status(404).json({
+        error: "Informe no encontrado.",
+      });
+    }
+
+    res.json({
+      message: "Informe eliminado correctamente.",
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getProfileActivity(req, res, next) {
   try {
     const summary = await reportRepository.getUserReportSummary(req.user.id);
-    const recentReports = await reportRepository.getRecentReportsByUser(req.user.id);
+
+    const recentReports = await reportRepository.getRecentReportsByUser(
+      req.user.id,
+    );
+
+    const asaDistribution = await reportRepository.getAsaDistribution(
+      req.user.id,
+    );
 
     return res.json({
       summary,
-      recentReports
+      recentReports,
+      asaDistribution,
     });
   } catch (error) {
     return next(error);
@@ -110,7 +174,7 @@ async function saveDraft(req, res, next) {
       surgery,
       decision,
       listDate,
-      formData
+      formData,
     } = req.body;
 
     let draft;
@@ -123,27 +187,27 @@ async function saveDraft(req, res, next) {
         surgery,
         decision,
         listDate,
-        formData
+        formData,
       });
     } else {
       draft = await reportRepository.createDraft({
         userId,
-        patientCode,
+        patientCode: patientCode || generatePatientCode(),
         diagnosis,
         surgery,
         decision,
         listDate,
-        formData
+        formData,
       });
     }
 
     if (!draft) {
-      return res.status(404).json({ message: 'Borrador no encontrado' });
+      return res.status(404).json({ message: "Borrador no encontrado" });
     }
 
     res.json({
-      message: 'Borrador guardado correctamente',
-      draft
+      message: "Borrador guardado correctamente",
+      draft,
     });
   } catch (error) {
     next(error);
@@ -167,7 +231,7 @@ async function getDraftById(req, res, next) {
     const draft = await reportRepository.getDraftById(draftId, userId);
 
     if (!draft) {
-      return res.status(404).json({ error: 'Borrador no encontrado.' });
+      return res.status(404).json({ error: "Borrador no encontrado." });
     }
 
     res.json(draft);
@@ -186,7 +250,7 @@ async function completeDraft({
   listDate,
   pdfFilename,
   pdfPath,
-  formData
+  formData,
 }) {
   const query = `
     UPDATE reports
@@ -217,7 +281,7 @@ async function completeDraft({
     pdfPath,
     formData,
     draftId,
-    userId
+    userId,
   ];
 
   const result = await db.query(query, values);
@@ -239,23 +303,23 @@ async function completeDraft(req, res, next) {
         data.patientCode ||
         data.patient_code ||
         data.general?.patientCode ||
-        `BOR-${Date.now()}`,
+        generatePatientCode(),
       diagnosis: data.diagnosis || data.general?.diagnosis || null,
       surgery: data.surgery || data.general?.surgery || null,
       decision: data.decision || data.conclusion?.decision || null,
       listDate: data.listDate || data.general?.listDate || null,
       pdfFilename: file.filename,
       pdfPath: file.path,
-      formData: data
+      formData: data,
     });
 
     if (!completedDraft) {
-      return res.status(404).json({ error: 'Borrador no encontrado.' });
+      return res.status(404).json({ error: "Borrador no encontrado." });
     }
 
     res.json({
-      message: 'Borrador completado correctamente.',
-      report: completedDraft
+      message: "Borrador completado correctamente.",
+      report: completedDraft,
     });
   } catch (error) {
     next(error);
@@ -270,11 +334,11 @@ async function deleteDraft(req, res, next) {
     const deletedDraft = await reportRepository.deleteDraft(draftId, userId);
 
     if (!deletedDraft) {
-      return res.status(404).json({ error: 'Borrador no encontrado.' });
+      return res.status(404).json({ error: "Borrador no encontrado." });
     }
 
     res.json({
-      message: 'Borrador eliminado correctamente.'
+      message: "Borrador eliminado correctamente.",
     });
   } catch (error) {
     next(error);
@@ -290,5 +354,6 @@ module.exports = {
   getDrafts,
   getDraftById,
   completeDraft,
-  deleteDraft
+  deleteDraft,
+  deleteReport,
 };

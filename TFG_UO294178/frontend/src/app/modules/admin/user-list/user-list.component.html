@@ -1,0 +1,145 @@
+<app-header></app-header>
+
+<div class="users-container">
+  <div class="welcome-banner">
+    <button mat-stroked-button type="button" (click)="exit()">
+      <mat-icon>arrow_back</mat-icon>
+      Volver al escritorio
+    </button>
+
+    <h1>Usuarios Activos</h1>
+    <p>Personal autorizado para acceder al sistema.</p>
+  </div>
+ @if (isLoading) {
+<p>Cargando usuarios...</p>
+}
+
+@if (errorMessage) {
+<div class="alert error">
+{{ errorMessage }}
+</div>
+}
+
+<div class="users-grid">
+
+@for (user of activeUsers; track user.id) {
+
+  <mat-card class="user-card">
+
+    <div class="user-header">
+
+      <mat-icon>account_circle</mat-icon>
+
+      <div class="user-info">
+        <h3>{{ user.name || 'Usuario sin nombre' }}</h3>
+        <p>{{ user.email }}</p>
+      </div>
+
+    </div>
+
+    <div class="user-badges">
+
+      <span
+        class="role"
+        [class.admin]="user.role === 'admin'"
+        [class.clinician]="user.role !== 'admin'">
+
+        {{ user.role === 'admin' ? 'Administrador' : 'Clínico' }}
+
+      </span>
+
+      <span class="status active">
+        Activo
+      </span>
+
+       @if (user.role !== 'admin') {
+
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="deleteUser(user.id, user.name)">
+
+        <mat-icon>delete</mat-icon>
+
+      </button>
+
+    }
+    </div>
+
+  </mat-card>
+
+}
+
+</div>
+
+@if (pendingUsers.length > 0) {
+
+<div class="pending-section">
+
+  <h2 class="section-title">
+    Pendientes de Activación ({{ pendingUsers.length }})
+  </h2>
+
+  <div class="users-grid">
+
+    @for (user of pendingUsers; track user.id) {
+
+      <mat-card class="user-card pending-card">
+
+        <div class="user-header">
+
+          <mat-icon>account_circle</mat-icon>
+
+          <div class="user-info">
+            <h3>{{ user.name || 'Usuario sin nombre' }}</h3>
+            <p>{{ user.email }}</p>
+          </div>
+
+        </div>
+
+        <div class="user-badges">
+
+          <span
+            class="role"
+            [class.admin]="user.role === 'admin'"
+            [class.clinician]="user.role !== 'admin'">
+
+            {{ user.role === 'admin' ? 'Administrador' : 'Clínico' }}
+
+          </span>
+
+          <span class="status pending">
+            Pendiente de activación
+          </span>
+
+        </div>
+
+      </mat-card>
+
+    }
+
+  </div>
+
+</div>
+
+}
+
+<div class="info-panel">
+  <h3>Información</h3>
+
+  <ul>
+    <li>
+      Los usuarios con estado <strong>Pendiente de activación</strong>
+      han sido autorizados por un administrador, pero todavía no han
+      completado el proceso de activación de su cuenta.
+    </li>
+
+    <li>
+      Para dar de baja un usuario del sistema, utilice el icono de
+      papelera situado junto a sus datos.
+    </li>
+
+  </ul>
+</div>
+
+</div>

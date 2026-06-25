@@ -1,5 +1,4 @@
 <mat-toolbar color="primary" class="navbar">
-
   <span class="logo">SERGAS</span>
   <span class="description">Sistema de Informes Preoperatorios</span>
 
@@ -8,22 +7,24 @@
 
   <!-- Si usuario loggeado -->
   @if (user$ | async; as user) {
+    <div class="user-info" [matMenuTriggerFor]="userMenu">
+      <div class="user-display">
+        <span class="user-name">
+          @if (user?.role === 'admin') {
+            {{ user?.displayName }}
+          } @else {
+            Dr. {{ user?.displayName }}
+          }
+        </span>
 
-  <div class="user-info" [matMenuTriggerFor]="userMenu">
-    <div class="user-display">
-      <span class="user-name">
-        Dr. {{ user.displayName }}
-      </span>
-
-      <div class="avatar-circle" [class.admin-avatar]="user.role === 'admin'">
-        {{ getInitial(user) }}
+        <div class="avatar-circle" [class.admin-avatar]="user.role === 'admin'">
+          {{ getInitial(user) }}
+        </div>
       </div>
     </div>
-  </div>
 
     <!-- Menú Desplegable -->
-    <mat-menu #userMenu="matMenu" >
-
+    <mat-menu #userMenu="matMenu">
       <!-- Panel Admin -->
       @if (user.role === 'admin') {
         <button mat-menu-item routerLink="/admin">
@@ -34,10 +35,13 @@
       }
 
       <!-- Perfil -->
-      <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon>
-        <span>Perfil</span>
-      </button>
+      @if (user.role !== 'admin') {
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Perfil</span>
+        </button>
+        <mat-divider></mat-divider>
+      }
 
       <!-- Cerrar Sesión -->
       <button mat-menu-item (click)="logout()">

@@ -1,50 +1,71 @@
 <app-header></app-header>
-<div class="history-container">
 
-  <!-- HEADER -->
+<div class="history-container">
   <div class="welcome-banner">
     <button mat-stroked-button type="button" (click)="exit()">
       <mat-icon>arrow_back</mat-icon>
       Volver al escritorio
     </button>
+
     <h1>Historial de Informes</h1>
     <p>Consulta y revisa informes preoperatorios generados</p>
   </div>
-  <!-- GRID -->
-  <div class="cards-grid">
 
-    @for (report of reports; track report.id) {
-    <mat-card class="history-card">
-
-      <div class="card-content-wrapper">
-
-        <!-- ICONO -->
-        <div class="icon-circle primary">
-          <mat-icon>description</mat-icon>
-        </div>
-
-        <!-- TEXTO -->
-        <div class="text-content">
-          <mat-card-title>{{ report.patient_code }}</mat-card-title>
-          <mat-card-subtitle>
-            Fecha Inclusión LE: {{ report.list_date | date:'dd/MM/yy' }}
-          </mat-card-subtitle>
-
-          <p class="description">
-            <strong>Diagnóstico:</strong> {{ report.diagnosis || '—' }} <br>
-            <strong>Cirugía:</strong> {{ report.surgery || '—' }} <br>
-            <strong>Decisión:</strong> {{ report.decision || '—' }}
-          </p>
-
-          <button mat-button color="primary" (click)="viewReport(report.id)">
-            Ver informe
-          </button>
-        </div>
-
-      </div>
-
+  @if (!loading && reports.length === 0) {
+    <mat-card class="empty-card">
+      <mat-icon>description</mat-icon>
+      <h2>No hay informes disponibles</h2>
+      <p>Los informes generados aparecerán aquí.</p>
     </mat-card>
-    }
+  }
 
-  </div>
+  @if (!loading && reports.length > 0) {
+    <div class="cards-grid">
+      @for (report of reports; track report.id) {
+        <mat-card class="history-card">
+          <div class="card-content-wrapper">
+            <div class="icon-circle primary">
+              <mat-icon>description</mat-icon>
+            </div>
+
+            <div class="text-content">
+              <mat-card-title>{{ report.patient_code }}</mat-card-title>
+
+              <mat-card-subtitle>
+                Fecha Inclusión LE:
+                {{ report.list_date | date: 'dd/MM/yy' }}
+              </mat-card-subtitle>
+
+              <p class="description">
+  <strong>Diagnóstico:</strong>
+  {{ report.diagnosis?.length > 40
+      ? (report.diagnosis | slice:0:40) + '...'
+      : report.diagnosis || '—' }}
+  <br>
+
+  <strong>Cirugía:</strong>
+  {{ report.surgery || '—' }}
+  <br>
+
+  <strong>Decisión:</strong>
+  {{ report.decision || '—' }}
+</p>
+
+              <div class="report-actions">
+                <button mat-stroked-button color="primary" (click)="viewReport(report.id)">
+                  <mat-icon>visibility</mat-icon>
+                  Ver informe
+                </button>
+
+                <button mat-stroked-button color="warn" (click)="deleteReport(report.id)">
+                  <mat-icon>delete</mat-icon>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
 </div>

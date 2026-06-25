@@ -2,7 +2,7 @@ import { formatDate, valueOrDash } from './utils/report-helpers';
 import { reportStyles } from './utils/report.styles';
 import { reportMargins } from './utils/report.margins';
 import { reportTheme } from './utils/report.theme';
-import { gridLayout, stripedGridLayout } from './utils/report.layouts';
+import { gridLayout } from './utils/report.layouts';
 
 export function buildReport(data: any): any {
   return {
@@ -10,7 +10,7 @@ export function buildReport(data: any): any {
 
     defaultStyle: {
       fontSize: reportTheme.fontSizes.body,
-      color: reportTheme.colors.text
+      color: reportTheme.colors.text,
     },
 
     styles: reportStyles,
@@ -21,16 +21,27 @@ export function buildReport(data: any): any {
         text: 'Informe Preoperatorio - Comité Perioperatorio',
         style: 'header',
         alignment: 'center',
-        margin: reportMargins.header
+        margin: reportMargins.header,
       },
 
       // 1. DIAGNÓSTICO
       { text: '1. Diagnóstico:', style: 'sectionHeader' },
       { text: data?.diagnosis || 'No especificado', style: 'bodyText' },
 
-      // 2. CIRUGÍA
+      // 2. CIRUGÍA, EDAD y SEXO
       { text: '2. Cirugía prevista:', style: 'sectionHeader' },
       { text: data?.surgery || 'No especificado', style: 'bodyText' },
+
+      { text: '3. Datos del paciente:', style: 'sectionHeader' },
+      {
+        text: [
+          { text: 'Edad: ', bold: true },
+          data?.age ?? '--',
+          { text: ' años   |   Sexo: ', bold: true },
+          data?.sex === '1' ? 'Hombre' : data?.sex === '0' ? 'Mujer' : '--',
+        ],
+        style: 'bodyText',
+      },
 
       // 3. FECHA Y PRIORIDAD
       { text: '3. Fecha inclusión en LE y Prioridad:', style: 'sectionHeader' },
@@ -39,9 +50,9 @@ export function buildReport(data: any): any {
           { text: 'Fecha: ', bold: true },
           formatDate(data?.listDate) || '--',
           { text: '  |  Prioridad: ', bold: true },
-          data?.priority || '--'
+          data?.priority || '--',
         ],
-        style: 'bodyText'
+        style: 'bodyText',
       },
 
       // 4. ANTECEDENTES
@@ -62,11 +73,11 @@ export function buildReport(data: any): any {
             [{ text: 'Capacidad Funcional (METS)', bold: true }, valueOrDash(data?.score_mets)],
             [{ text: 'Escala FRAIL', bold: true }, valueOrDash(data?.score_frail)],
             [{ text: 'Escala BARTHEL', bold: true }, valueOrDash(data?.score_barthel)],
-            [{ text: 'Riesgo Quirúrgico', bold: true }, valueOrDash(data?.surgical_risk)]
-          ]
+            [{ text: 'Riesgo Quirúrgico', bold: true }, valueOrDash(data?.surgical_risk)],
+          ],
         },
         layout: gridLayout,
-        margin: reportMargins.blockAfter
+        margin: reportMargins.blockAfter,
       },
 
       // 7. CONSTANTES VITALES
@@ -81,7 +92,7 @@ export function buildReport(data: any): any {
               { text: 'IMC', style: 'th' },
               { text: 'TA', style: 'th' },
               { text: 'FC', style: 'th' },
-              { text: 'Ritmo', style: 'th' }
+              { text: 'Ritmo', style: 'th' },
             ],
             [
               data?.weight ? `${data.weight} kg` : '--',
@@ -89,12 +100,12 @@ export function buildReport(data: any): any {
               valueOrDash(data?.bmi),
               data?.bp ? `${data.bp} mmHg` : '--',
               data?.hr ? `${data.hr} lpm` : '--',
-              valueOrDash(data?.rhythm)
-            ]
-          ]
+              valueOrDash(data?.rhythm),
+            ],
+          ],
         },
         layout: gridLayout,
-        margin: reportMargins.blockAfter
+        margin: reportMargins.blockAfter,
       },
 
       // 8. VÍA AÉREA
@@ -103,172 +114,189 @@ export function buildReport(data: any): any {
         columns: [
           {
             width: '*',
-            text: [{ text: 'Dentadura a retirar: ', bold: true }, data?.dentures ? 'Sí' : 'No']
+            text: [{ text: 'Dentadura a retirar: ', bold: true }, data?.dentures ? 'Sí' : 'No'],
           },
           {
             width: '*',
-            text: [{ text: 'Mallampati: ', bold: true }, valueOrDash(data?.mallampati)]
-          }
+            text: [{ text: 'Mallampati: ', bold: true }, valueOrDash(data?.mallampati)],
+          },
         ],
         columnGap: 10,
-        margin: reportMargins.colsTight
+        margin: reportMargins.colsTight,
       },
       {
         columns: [
           {
             width: '*',
-            text: [{ text: 'Dist. Tiromentoniana: ', bold: true }, valueOrDash(data?.thyromental)]
+            text: [{ text: 'Dist. Tiromentoniana: ', bold: true }, valueOrDash(data?.thyromental)],
           },
           {
             width: '*',
-            text: [{ text: 'Dist. Interincisivos: ', bold: true }, valueOrDash(data?.interincisor)]
-          }
+            text: [{ text: 'Dist. Interincisivos: ', bold: true }, valueOrDash(data?.interincisor)],
+          },
         ],
         columnGap: 10,
-        margin: reportMargins.colsTight
+        margin: reportMargins.colsTight,
       },
       {
-        text: [{ text: 'Intubaciones previas: ', bold: true }, valueOrDash(data?.previousIntubations)],
-        margin: reportMargins.blockAfter
+        text: [
+          { text: 'Intubaciones previas: ', bold: true },
+          valueOrDash(data?.previousIntubations),
+        ],
+        margin: reportMargins.blockAfter,
       },
 
-    // 9. ANALÍTICA / EXPLORACIONES COMPLEMENTARIAS
-    { text: '9. Exploraciones Complementarias:', style: 'sectionHeader' },
+      // 9. ANALÍTICA / EXPLORACIONES COMPLEMENTARIAS
+      { text: '9. Exploraciones Complementarias:', style: 'sectionHeader' },
 
-    { text: 'HEMATOLOGÍA', style: 'subHeader' },
-    {
-      table: {
-        widths: ['35%', '15%', '35%', '15%'],
-        body: [
-          [
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' },
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' }
+      { text: 'HEMATOLOGÍA', style: 'subHeader' },
+      {
+        table: {
+          widths: ['35%', '15%', '35%', '15%'],
+          body: [
+            [
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+            ],
+            [
+              { text: 'Hemoglobina', bold: true },
+              valueOrDash(data?.hemoglobin),
+              { text: 'Plaquetas', bold: true },
+              valueOrDash(data?.platelets),
+            ],
+            [
+              { text: 'Coagulación', bold: true },
+              valueOrDash(data?.coagulation),
+              { text: 'GSAB', bold: true },
+              valueOrDash(data?.gsab),
+            ],
           ],
-          [
-            { text: 'Hemoglobina', bold: true }, valueOrDash(data?.hemoglobin),
-            { text: 'Plaquetas', bold: true }, valueOrDash(data?.platelets)
-          ],
-          [
-            { text: 'Coagulación', bold: true }, valueOrDash(data?.coagulation),
-            { text: 'GSAB', bold: true }, valueOrDash(data?.gsab)
-          ]
-        ]
+        },
+        layout: gridLayout,
+        margin: [0, 0, 0, 10],
       },
-      layout: gridLayout,
-      margin: [0, 0, 0, 10]
-    },
 
-    { text: 'BIOQUÍMICA', style: 'subHeader' },
-    {
-      table: {
-        widths: ['35%', '15%', '35%', '15%'],
-        body: [
-          [
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' },
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' }
+      { text: 'BIOQUÍMICA', style: 'subHeader' },
+      {
+        table: {
+          widths: ['35%', '15%', '35%', '15%'],
+          body: [
+            [
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+            ],
+            [
+              { text: 'Glucemia', bold: true },
+              valueOrDash(data?.glucose),
+              { text: 'Función Renal', bold: true },
+              valueOrDash(data?.renal),
+            ],
+            [
+              { text: 'Función Hepática', bold: true },
+              valueOrDash(data?.hepatic),
+              { text: 'Iones', bold: true },
+              valueOrDash(data?.ions),
+            ],
+            [
+              { text: 'Sodio', bold: true },
+              valueOrDash(data?.sodium),
+              { text: 'Potasio', bold: true },
+              valueOrDash(data?.potassium),
+            ],
+            [
+              { text: 'Calcio', bold: true },
+              valueOrDash(data?.calcium),
+              { text: 'Fósforo', bold: true },
+              valueOrDash(data?.phosphorus),
+            ],
+            [{ text: 'Magnesio', bold: true }, valueOrDash(data?.magnesium), '', ''],
           ],
-          [
-            { text: 'Glucemia', bold: true }, valueOrDash(data?.glucose),
-            { text: 'Función Renal', bold: true }, valueOrDash(data?.renal)
-          ],
-          [
-            { text: 'Función Hepática', bold: true }, valueOrDash(data?.hepatic),
-            { text: 'Iones', bold: true }, valueOrDash(data?.ions)
-          ],
-          [
-            { text: 'Sodio', bold: true }, valueOrDash(data?.sodium),
-            { text: 'Potasio', bold: true }, valueOrDash(data?.potassium)
-          ],
-          [
-            { text: 'Calcio', bold: true }, valueOrDash(data?.calcium),
-            { text: 'Fósforo', bold: true }, valueOrDash(data?.phosphorus)
-          ],
-          [
-            { text: 'Magnesio', bold: true }, valueOrDash(data?.magnesium),
-            '', ''
-          ]
-        ]
+        },
+        layout: gridLayout,
+        margin: [0, 0, 0, 10],
       },
-      layout: gridLayout,
-      margin: [0, 0, 0, 10]
-    },
 
-    { text: 'MARCADORES CARDÍACOS', style: 'subHeader' },
-    {
-      table: {
-        widths: ['35%', '15%', '35%', '15%'],
-        body: [
-          [
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' },
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' }
+      { text: 'MARCADORES CARDÍACOS', style: 'subHeader' },
+      {
+        table: {
+          widths: ['35%', '15%', '35%', '15%'],
+          body: [
+            [
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+            ],
+            [
+              { text: 'Pro-BNP', bold: true },
+              valueOrDash(data?.probnp),
+              { text: 'Troponinas', bold: true },
+              valueOrDash(data?.troponins),
+            ],
+            [{ text: 'Otros Marcadores', bold: true }, valueOrDash(data?.cardiac_markers), '', ''],
           ],
-          [
-            { text: 'Pro-BNP', bold: true }, valueOrDash(data?.probnp),
-            { text: 'Troponinas', bold: true }, valueOrDash(data?.troponins)
-          ],
-          [
-            { text: 'Otros Marcadores', bold: true }, valueOrDash(data?.cardiac_markers),
-            '', ''
-          ]
-        ]
+        },
+        layout: gridLayout,
+        margin: [0, 0, 0, 10],
       },
-      layout: gridLayout,
-      margin: [0, 0, 0, 10]
-    },
 
-    { text: 'NUTRICIONAL / ANEMIA', style: 'subHeader' },
-    {
-      table: {
-        widths: ['35%', '15%', '35%', '15%'],
-        body: [
-          [
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' },
-            { text: 'Parámetro', style: 'th' },
-            { text: 'Valor', style: 'th' }
+      { text: 'NUTRICIONAL / ANEMIA', style: 'subHeader' },
+      {
+        table: {
+          widths: ['35%', '15%', '35%', '15%'],
+          body: [
+            [
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+              { text: 'Parámetro', style: 'th' },
+              { text: 'Valor', style: 'th' },
+            ],
+            [
+              { text: 'Prealbúmina', bold: true },
+              valueOrDash(data?.prealbumin),
+              { text: 'Hierro', bold: true },
+              valueOrDash(data?.iron),
+            ],
+            [
+              { text: 'Transferrina', bold: true },
+              valueOrDash(data?.transferrin),
+              { text: 'Ácido Fólico', bold: true },
+              valueOrDash(data?.folic_acid),
+            ],
+            [
+              { text: 'Estudio General', bold: true },
+              valueOrDash(data?.nutritional_study),
+              { text: 'Perfil Anemia', bold: true },
+              valueOrDash(data?.anemia_profile),
+            ],
           ],
-          [
-            { text: 'Prealbúmina', bold: true }, valueOrDash(data?.prealbumin),
-            { text: 'Hierro', bold: true }, valueOrDash(data?.iron)
-          ],
-          [
-            { text: 'Transferrina', bold: true }, valueOrDash(data?.transferrin),
-            { text: 'Ácido Fólico', bold: true }, valueOrDash(data?.folic_acid)
-          ],
-          [
-            { text: 'Estudio General', bold: true }, valueOrDash(data?.nutritional_study),
-            { text: 'Perfil Anemia', bold: true }, valueOrDash(data?.anemia_profile)
-          ]
-        ]
+        },
+        layout: gridLayout,
+        margin: reportMargins.blockAfter,
       },
-      layout: gridLayout,
-      margin: reportMargins.blockAfter
-    },
 
-    // OTRAS PRUEBAS
-    { text: 'Otras Exploraciones:', style: 'sectionHeader', margin: [0, 0, 0, 6] },
-    {
-      table: {
-        widths: ['35%', '65%'],
-        body: [
-          [{ text: 'EKG', bold: true }, valueOrDash(data?.ekg)],
-          [{ text: 'Radiografía Tórax', bold: true }, valueOrDash(data?.xray)],
-          [{ text: 'Ecocardiograma', bold: true }, valueOrDash(data?.echo)],
-          [{ text: 'TAC', bold: true }, valueOrDash(data?.ct_scan)],
-          [{ text: 'Espirometría', bold: true }, valueOrDash(data?.spirometry)],
-          [{ text: 'Cateterismo', bold: true }, valueOrDash(data?.cath)],
-          [{ text: 'Otros', bold: true }, data?.others || 'Sin hallazgos adicionales']
-        ]
+      // OTRAS PRUEBAS
+      { text: 'Otras Exploraciones:', style: 'sectionHeader', margin: [0, 0, 0, 6] },
+      {
+        table: {
+          widths: ['35%', '65%'],
+          body: [
+            [{ text: 'EKG', bold: true }, valueOrDash(data?.ekg)],
+            [{ text: 'Radiografía Tórax', bold: true }, valueOrDash(data?.xray)],
+            [{ text: 'Ecocardiograma', bold: true }, valueOrDash(data?.echo)],
+            [{ text: 'TAC', bold: true }, valueOrDash(data?.ct_scan)],
+            [{ text: 'Espirometría', bold: true }, valueOrDash(data?.spirometry)],
+            [{ text: 'Cateterismo', bold: true }, valueOrDash(data?.cath)],
+            [{ text: 'Otros', bold: true }, data?.others || 'Sin hallazgos adicionales'],
+          ],
+        },
+        layout: gridLayout,
+        margin: reportMargins.blockAfter,
       },
-      layout: gridLayout,
-      margin: reportMargins.blockAfter
-    },
 
       // 10. PROBLEMA
       { text: '10. Problema de manejo perioperatorio:', style: 'sectionHeader' },
@@ -282,18 +310,28 @@ export function buildReport(data: any): any {
       {
         text: [
           { text: '12. Decisión: ', style: 'sectionHeader' },
-          { text: String(data?.decision || 'PENDIENTE').toUpperCase(), style: 'decisionText' }
+          { text: String(data?.decision || 'PENDIENTE').toUpperCase(), style: 'decisionText' },
         ],
-        margin: reportMargins.decision
+        margin: reportMargins.decision,
       },
       data?.decision === 'Demorado'
         ? {
             text: `Motivo: ${data?.delayReason || '--'}`,
             margin: reportMargins.decisionReason,
             italics: true,
-            color: reportTheme.colors.danger
+            color: reportTheme.colors.danger,
           }
         : {},
+
+      //RIESGO
+
+      {
+        text: [
+          { text: 'Riesgo cardiovascular estimado: ', bold: true },
+          data?.cardiacRisk || 'No disponible',
+        ],
+        style: 'bodyText',
+      },
 
       // FIRMA
       {
@@ -301,19 +339,19 @@ export function buildReport(data: any): any {
         alignment: 'center',
         italics: true,
         color: reportTheme.colors.muted,
-        margin: reportMargins.signatureHeader
+        margin: reportMargins.signatureHeader,
       },
       {
         columns: [
           { width: '*', text: '' },
           {
             width: 200,
-            text: `Fecha: ${new Date().toLocaleDateString()}\n\nDr/Dra: Teresa`,
+            text: `Fecha: ${new Date().toLocaleDateString()}\n\nDr/Dra: ${data.doctorName || ''}`,
             alignment: 'center',
-            margin: reportMargins.signatureBox
-          }
-        ]
-      }
-    ]
+            margin: reportMargins.signatureBox,
+          },
+        ],
+      },
+    ],
   };
 }

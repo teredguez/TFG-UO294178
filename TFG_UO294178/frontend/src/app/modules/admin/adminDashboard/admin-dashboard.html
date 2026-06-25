@@ -1,0 +1,32 @@
+<app-header></app-header>
+
+<div class="dashboard-container">
+  <div class="welcome-banner">
+    <h1>Panel de Administración</h1>
+    <p>Gestiona los usuarios autorizados del sistema.</p>
+  </div>
+
+  <div class="cards-grid">
+    <div class="dashboard-card" routerLink="/admin">
+      <div class="card-icon">
+        <mat-icon>person_add</mat-icon>
+      </div>
+
+      <div class="card-content">
+        <h3>Autorizar Usuario</h3>
+        <p>Registrar nuevos profesionales.</p>
+      </div>
+    </div>
+
+    <div class="dashboard-card" routerLink="/admin/users">
+      <div class="card-icon">
+        <mat-icon>groups</mat-icon>
+      </div>
+
+      <div class="card-content">
+        <h3>Gestión de Usuarios</h3>
+        <p>Consultar y dar de baja usuarios registrados en el sistema.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -20,12 +20,15 @@ import { ConclusionStepComponent } from './components/conclusion-step/conclusion
 
 import { BARTHEL_QUESTIONS, BarthelQuestion } from './config/barthel.config';
 import { buildFinalReport } from './utils/form-mappers';
+import { AuthService } from '../../core/services/auth.service';
+import { calculateCardiacRisk } from '../../core/services/cardiac-risk';
+
 import {
   calculateImc,
   calculateFrailScore,
   getFrailInterpretation,
   calculateBarthelScore,
-  getBarthelInterpretation
+  getBarthelInterpretation,
 } from './utils/form-calculations';
 import {
   buildGeneralForm,
@@ -33,7 +36,7 @@ import {
   buildBiometricsForm,
   buildAirwayForm,
   buildLabsForm,
-  buildConclusionForm
+  buildConclusionForm,
 } from './utils/form-builders';
 
 @Component({
@@ -49,10 +52,10 @@ import {
     FunctionalStepComponent,
     BiometricsStepComponent,
     LabsStepComponent,
-    ConclusionStepComponent
+    ConclusionStepComponent,
   ],
   templateUrl: './form.component.html',
-  styleUrls: ['./form.component.css']
+  styleUrls: ['./form.component.css'],
 })
 export class FormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -62,6 +65,7 @@ export class FormComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private reportsService = inject(ReportsService);
   private route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
 
   generalForm: FormGroup;
   functionalForm: FormGroup;
@@ -76,6 +80,7 @@ export class FormComponent implements OnInit {
   barthelScore = 0;
   barthelInterpretation = '';
   draftId: number | null = null;
+  currentUserName = '';
 
   readonly barthelQuestions: BarthelQuestion[] = BARTHEL_QUESTIONS;
 
@@ -96,6 +101,12 @@ export class FormComponent implements OnInit {
     if (draftId) {
       this.loadDraft(Number(draftId));
     }
+
+    this.authService.currentUserProfile$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => {
+        this.currentUserName = user?.displayName || '';
+      });
   }
 
   get isDelayed(): boolean {
@@ -103,27 +114,30 @@ export class FormComponent implements OnInit {
   }
 
   exitForm(): void {
-    this.dialog.open(ConfirmDialogComponent, {
-      width: '420px',
-      data: {
-        title: 'Salir del formulario',
-        message: '¿Seguro que quieres salir? Los cambios no guardados se perderán.',
-        confirmText: 'Salir',
-        cancelText: 'Cancelar'
-      }
-    }).afterClosed().subscribe(confirmed => {
-      if (confirmed) this.router.navigate(['/dashboard']);
-    });
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: '420px',
+        data: {
+          title: 'Salir del formulario',
+          message: '¿Seguro que quieres salir? Los cambios no guardados se perderán.',
+          confirmText: 'Salir',
+          cancelText: 'Cancelar',
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) this.router.navigate(['/dashboard']);
+      });
   }
 
   openRiskTable(): void {
     this.dialog.open(TableDialogComponent, {
       data: {
         title: 'Tabla de Riesgo Quirúrgico',
-        imageSrc: 'assets/tabla_riesgo.png'
+        imageSrc: 'assets/tabla_riesgo.png',
       },
       width: '90vw',
-      maxWidth: '800px'
+      maxWidth: '800px',
     });
   }
 
@@ -131,14 +145,32 @@ export class FormComponent implements OnInit {
     this.dialog.open(TableDialogComponent, {
       data: {
         title: 'Clasificación ASA',
-        imageSrc: 'assets/tabla_asa.png'
+        imageSrc: 'assets/tabla_asa.png',
       },
       width: '90vw',
-      maxWidth: '800px'
+      maxWidth: '800px',
     });
   }
 
   async onSubmit(): Promise<void> {
+    if (this.generalForm.invalid || this.conclusionForm.invalid) {
+      this.generalForm.markAllAsTouched();
+      this.conclusionForm.markAllAsTouched();
+
+      this.dialog.open(ConfirmDialogComponent, {
+        width: '420px',
+        data: {
+          title: 'Campos obligatorios incompletos',
+          message:
+            'Existen campos obligatorios sin completar. Revise el formulario antes de generar el informe.',
+          confirmText: 'Aceptar',
+          showCancel: false,
+        },
+      });
+
+      return;
+    }
+
     const finalReport = buildFinalReport({
       generalFormValue: this.generalForm.value,
       functionalFormValue: this.functionalForm.value,
@@ -148,8 +180,11 @@ export class FormComponent implements OnInit {
       conclusionFormValue: this.conclusionForm.value,
       imcValue: this.imcValue,
       frailInterpretation: this.frailInterpretation,
-      barthelInterpretation: this.barthelInterpretation
+      barthelInterpretation: this.barthelInterpretation,
     });
+
+    (finalReport as any).doctorName = this.currentUserName;
+    (finalReport as any).cardiacRisk = calculateCardiacRisk(finalReport);
 
     const blob = await this.pdfService.generateReportBlob(finalReport);
     const file = new File([blob], 'test.pdf', { type: 'application/pdf' });
@@ -168,14 +203,14 @@ export class FormComponent implements OnInit {
       error: (err) => {
         console.error('Error guardando el informe', err);
         alert('No se pudo guardar el informe');
-      }
+      },
     });
   }
 
   private setupImcCalculation(): void {
     this.biometricsForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(values => {
+      .subscribe((values) => {
         this.imcValue = calculateImc(values.weight, values.height);
       });
   }
@@ -183,13 +218,13 @@ export class FormComponent implements OnInit {
   private setupFunctionalCalculations(): void {
     this.functionalForm.valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(values => {
+      .subscribe((values) => {
         this.frailScore = calculateFrailScore({
           f_fatigue: values.f_fatigue,
           f_resistance: values.f_resistance,
           f_aerobic: values.f_aerobic,
           f_illness: values.f_illness,
-          f_weight_loss: values.f_weight_loss
+          f_weight_loss: values.f_weight_loss,
         });
 
         this.frailInterpretation = getFrailInterpretation(this.frailScore);
@@ -211,8 +246,8 @@ export class FormComponent implements OnInit {
         frailScore: this.frailScore,
         frailInterpretation: this.frailInterpretation,
         barthelScore: this.barthelScore,
-        barthelInterpretation: this.barthelInterpretation
-      }
+        barthelInterpretation: this.barthelInterpretation,
+      },
     };
 
     const payload = {
@@ -222,7 +257,7 @@ export class FormComponent implements OnInit {
       surgery: formData.general.surgery,
       decision: formData.conclusion.decision,
       listDate: formData.general.listDate,
-      formData
+      formData,
     };
 
     this.reportsService.saveDraft(payload).subscribe({
@@ -234,8 +269,8 @@ export class FormComponent implements OnInit {
             title: 'Borrador guardado',
             message: 'El borrador se ha guardado correctamente.',
             confirmText: 'Aceptar',
-            showCancel: false
-          }
+            showCancel: false,
+          },
         });
       },
       error: (error) => {
@@ -246,10 +281,10 @@ export class FormComponent implements OnInit {
             title: 'Error',
             message: 'No se pudo guardar el borrador.',
             confirmText: 'Aceptar',
-            showCancel: false
-          }
+            showCancel: false,
+          },
         });
-      }
+      },
     });
   }
 
@@ -279,8 +314,7 @@ export class FormComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error cargando borrador:', err);
-      }
+      },
     });
   }
-
 }

@@ -39,3 +39,8 @@
 .full-width {
   width: 100%;
 }
+
+.required::after {
+  content: " *";
+  color: #dc2626;
+}

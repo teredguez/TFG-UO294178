@@ -4,7 +4,7 @@ import { BarthelQuestion } from '../config/barthel.config';
 function initBarthelControls(questions: BarthelQuestion[]): Record<string, [number | null]> {
   const controls: Record<string, [number | null]> = {};
 
-  questions.forEach(question => {
+  questions.forEach((question) => {
     controls[question.control] = [null];
   });
 
@@ -15,16 +15,23 @@ export function buildGeneralForm(fb: FormBuilder): FormGroup {
   return fb.group({
     diagnosis: ['', Validators.required],
     surgery: ['', Validators.required],
+
+    age: ['', [Validators.required, Validators.min(10), Validators.max(120)]],
+    sex: ['', Validators.required],
+
     listDate: [''],
     priority: [''],
     history: [''],
-    medication: ['']
+    ischemicHeartDisease: [false],
+    heartFailure: [false],
+    diabetes: [false],
+    medication: [''],
   });
 }
 
 export function buildFunctionalForm(
   fb: FormBuilder,
-  barthelQuestions: BarthelQuestion[]
+  barthelQuestions: BarthelQuestion[],
 ): FormGroup {
   return fb.group({
     asa: ['', Validators.required],
@@ -38,7 +45,7 @@ export function buildFunctionalForm(
     f_weight_loss: [false],
 
     b_wheelchair: [false],
-    ...initBarthelControls(barthelQuestions)
+    ...initBarthelControls(barthelQuestions),
   });
 }
 
@@ -48,7 +55,7 @@ export function buildBiometricsForm(fb: FormBuilder): FormGroup {
     height: [''],
     bp: [''],
     hr: [''],
-    rhythm: ['']
+    rhythm: [''],
   });
 }
 
@@ -58,7 +65,7 @@ export function buildAirwayForm(fb: FormBuilder): FormGroup {
     mallampati: [''],
     thyromental: [''],
     interincisor: [''],
-    previousIntubations: ['']
+    previousIntubations: [''],
   });
 }
 
@@ -97,7 +104,7 @@ export function buildLabsForm(fb: FormBuilder): FormGroup {
     ct_scan: [''],
     spirometry: [''],
     cath: [''],
-    others: ['']
+    others: [''],
   });
 }
 
@@ -106,6 +113,6 @@ export function buildConclusionForm(fb: FormBuilder): FormGroup {
     problem: [''],
     plan: [''],
     decision: ['', Validators.required],
-    delayReason: ['']
+    delayReason: [''],
   });
 }
