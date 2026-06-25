@@ -21,8 +21,18 @@ services:
     ports:
       - "3000:3000"
 
-    env_file:
-      - ./backend/.env
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: tere123
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: tfgUO294178_db
+
+      SESSION_SECRET: tfg_uo294178_secret
+
+      PORT: 3000
+      NODE_ENV: development
+      FRONTEND_URL: http://localhost:4200
 
     depends_on:
       - postgres
@@ -35,5 +45,7 @@ services:
 
     depends_on:
       - backend
+
 volumes:
   postgres_data:
+  
